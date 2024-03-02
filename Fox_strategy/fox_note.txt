@@ -1,0 +1,16 @@
+- have message and image.
+- Message_length phase_1: the message length is fixed to 20 characters.
+- Rules
+• You can only send a maximum of one Real message per chunk.
+• The maximum number of chunks you can use is 20.
+• You can only use Fake messages if your budget allows for it (details will be explained
+in the upcoming sections).
+• The rest of the channels would contain Empty messages.
+• The messages must be encoded using the Least Significant Bit (LSB) technique, which
+will be discussed in the next section
+
+- only use a maximum of 12 Fake messages by the Fake message budget is valid only for a single game and is reset to zero at the beginning
+of the next game.
+-
+
+

@@ -14,7 +14,27 @@ def init_fox(team_id):
     If a sucessful response is returned, you will recive back the message that you can break into chunkcs
       and the carrier image that you will encode the chunk in it.
     '''
-    pass
+    # API endpoint
+    url = api_base_url + "/fox/start"
+    # Request payload
+    payload = {"teamId": team_id}
+    # Make the API request
+    response = requests.post(url, json=payload)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        response_data = response.json()
+        # Extracting the secret message and carrier image
+        secret_message = response_data.get("msg")
+        image_carrier = response_data.get("carrier_image")
+    else:
+        # Print an error message if the request was not successful
+        print("Error:", response.text)
+
+    #TODO: return the secret message and the carrier image
+    # image_carrier is List???
+    return secret_message, image_carrier 
+    
 
 def generate_message_array(message, image_carrier):  
     '''
@@ -24,7 +44,8 @@ def generate_message_array(message, image_carrier):
         3. Decide what 3 chuncks you will send in each turn in the 3 channels & what is their entities (F,R,E)
         4. Encode each chunck in the image carrier  
     '''
-    pass 
+    pass
+
 
 def get_riddle(team_id, riddle_id):
     '''
@@ -36,6 +57,24 @@ def get_riddle(team_id, riddle_id):
         3. You cannot request several riddles at a time, so requesting a new riddle without answering the old one
           will allow you to answer only the new riddle and you will have no access again to the old riddle. 
     '''
+    # API endpoint
+    url = api_base_url + "/fox/get-riddle"
+    # Request payload
+    payload = {"teamId": team_id,
+               "riddleId":riddle_id
+               }
+    # Make the API request
+    response = requests.get(url, json=payload)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        response_data = response.json()
+        test_case = response_data.get("test_case")
+    else:
+        # Print an error message if the request was not successful
+        print("Error:", response.text)
+
+    return test_case
     # api endpoint is /fox/get-riddle with post method
     data = {"teamId": team_id, "riddleId": riddle_id}
     response = requests.post(api_base_url + "fox/get-riddle", json=data)
@@ -57,6 +96,26 @@ def solve_riddle(team_id, solution):
     You will hit the API end point that submits your answer.
     Use te riddle_solvers.py to implement the logic of each riddle.
     '''
+     # API endpoint
+    url = api_base_url + "/fox/solve-riddle"
+    # Request payload
+    payload = {"teamId": team_id,
+               "solution":solution
+               }
+    # Make the API request
+    response = requests.post(url, json=payload)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        response_data = response.json()
+        budget_increase = response_data.get("budget_increase")
+        total_budget = response_data.get("total_budget")
+        status=response_data.get("status")
+    else:
+        # Print an error message if the request was not successful
+        print("Error:", response.text)
+
+    return budget_increase ,total_budget,status 
     # api endpoint is /fox/submit-riddle with post method
     data = {"teamId": team_id, "solution": solution}
     response = requests.post(api_base_url + "fox/submit-riddle", json=data)
@@ -80,7 +139,25 @@ def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     You will need to send the message (images) in each of the 3 channels along with their entites.
     Refer to the API documentation to know more about what needs to be send in this api call. 
     '''
-    pass
+    # API endpoint
+    url = api_base_url + "/fox/send-message"
+    # Request payload
+    payload = {"teamId": team_id,
+               "messages":messages,
+                "message entities":message_entities
+               }
+    # Make the API request
+    response = requests.post(url, json=payload)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        response_data = response.json()
+        status = response_data.get("status")
+    else:
+        # Print an error message if the request was not successful
+        print("Error:", response.text)
+
+    return status 
    
 def end_fox(team_id):
     '''
@@ -90,7 +167,20 @@ def end_fox(team_id):
     2. Calling it without sending all the real messages will also affect your scoring fucntion
       (Like failing to submit the entire message within the timelimit of the game).
     '''
-    pass
+    # API endpoint
+    url = api_base_url + "/fox/end-game"
+    # Request payload
+    payload = {"teamId": team_id}
+    # Make the API request
+    response = requests.post(url, json=payload)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        #TODO: Parse the JSON response
+        response_data = response
+        print( response_data)
+    else:
+        # Print an error message if the request was not successful
+        print("Error:", response.text)
 
 def submit_fox_attempt(team_id):
     '''
@@ -111,7 +201,21 @@ def submit_fox_attempt(team_id):
             2.b. You cannot send 3 E(Empty) messages, there should be atleast R(Real)/F(Fake)
         3. Refer To the documentation to know more about the API handling 
     '''
-    pass 
+    #1. Initialize the game as fox
+    message ,image_carriers= init_fox(team_id)
+    #2. Solve riddles
+    # iterate on ridele_solvers
+    for riddle_id in riddle_solvers:
+        test_case = get_riddle(team_id, riddle_id)
+        solution = riddle_solvers[riddle_id](test_case)
+        budget_increase ,total_budget,status = solve_riddle(team_id, solution)
+    #3. Make your own Strategy of sending the messages in the 3 channels
+    #4. Make your own Strategy of splitting the message into chunks
+    #5. Send the messages
+    #6. End the Game
+    end_fox(team_id)
+    
+    
 
 
 submit_fox_attempt(team_id)
