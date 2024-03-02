@@ -4,11 +4,13 @@ from LSBSteg import encode
 from riddle_solvers import riddle_solvers
 
 api_base_url = None
+#TODO: Set the api_base_url to the base url of the API when Ready
+# api_base_url = "http://3.70.97.142:5000/"
 team_id= "hAaIrJk"
 
 def init_fox(team_id):
     '''
-    In this fucntion you need to hit to the endpoint to start the game as a fox with your team id.
+    In this function you need to hit to the endpoint to start the game as a fox with your team id.
     If a sucessful response is returned, you will recive back the message that you can break into chunkcs
       and the carrier image that you will encode the chunk in it.
     '''
@@ -73,6 +75,20 @@ def get_riddle(team_id, riddle_id):
         print("Error:", response.text)
 
     return test_case
+    # api endpoint is /fox/get-riddle with post method
+    data = {"teamId": team_id, "riddleId": riddle_id}
+    response = requests.post(api_base_url + "fox/get-riddle", json=data)
+    # check if statuscode is 200 or 201
+    if response.status_code != 200 and response.status_code != 201:
+        return None,False
+    
+    # response is a json object with the test_case
+    response = response.json() 
+    # return the riddle and True
+    riddle = response["test_case"]
+
+    return riddle,True
+
 
 def solve_riddle(team_id, solution):
     '''
@@ -100,6 +116,22 @@ def solve_riddle(team_id, solution):
         print("Error:", response.text)
 
     return budget_increase ,total_budget,status 
+    # api endpoint is /fox/submit-riddle with post method
+    data = {"teamId": team_id, "solution": solution}
+    response = requests.post(api_base_url + "fox/submit-riddle", json=data)
+
+    if response.status_code != 200 and response.status_code != 201:
+        return None,None,None,False
+    
+    # response is a json object with the test_case
+    response = response.json()
+    # check if the solution is correct
+    if response["status"] == "success":
+        # return True  and total budget and additional budget
+        return True, response["total_budget"], response["budget_increase"],True
+    else:
+        # return False and the correct solution
+        return False, response["total_budget"], response["budget_increase"],True
 
 def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     '''
