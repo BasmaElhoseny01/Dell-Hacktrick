@@ -3,7 +3,8 @@ import numpy as np
 from LSBSteg import encode
 from riddle_solvers import riddle_solvers
 
-api_base_url = None
+# api_base_url with ip address of the server = 3.70.97.142 and port 5000
+api_base_url = "http://3.70.97.142:5000/"
 team_id= "hAaIrJk"
 
 def init_fox(team_id):
@@ -34,7 +35,20 @@ def get_riddle(team_id, riddle_id):
         3. You cannot request several riddles at a time, so requesting a new riddle without answering the old one
           will allow you to answer only the new riddle and you will have no access again to the old riddle. 
     '''
-    pass
+    # api endpoint is /fox/get-riddle with post method
+    data = {"teamId": team_id, "riddleId": riddle_id}
+    response = requests.post(api_base_url + "fox/get-riddle", json=data)
+    # check if statuscode is 200 or 201
+    if response.status_code != 200 and response.status_code != 201:
+        return None,False
+    
+    # response is a json object with the test_case
+    response = response.json() 
+    # return the riddle and True
+    riddle = response["test_case"]
+    
+    return riddle,True
+
 
 def solve_riddle(team_id, solution):
     '''
@@ -42,7 +56,22 @@ def solve_riddle(team_id, solution):
     You will hit the API end point that submits your answer.
     Use te riddle_solvers.py to implement the logic of each riddle.
     '''
-    pass
+    # api endpoint is /fox/submit-riddle with post method
+    data = {"teamId": team_id, "solution": solution}
+    response = requests.post(api_base_url + "fox/submit-riddle", json=data)
+
+    if response.status_code != 200 and response.status_code != 201:
+        return None,None,None,False
+    
+    # response is a json object with the test_case
+    response = response.json()
+    # check if the solution is correct
+    if response["status"] == "success":
+        # return True  and total budget and additional budget
+        return True, response["total_budget"], response["budget_increase"],True
+    else:
+        # return False and the correct solution
+        return False, response["total_budget"], response["budget_increase"],True
 
 def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     '''
