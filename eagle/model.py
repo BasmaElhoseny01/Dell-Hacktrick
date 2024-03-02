@@ -28,15 +28,15 @@ class GRU(nn.Module):
 
         # First GRU layer
         x, _ = self.gru1(x)
-        x = self.dropout2(x)
         x = self.batchnorm2(x)
+        x = self.dropout2(x)
 
         # Second GRU layer
         x, _ = self.gru2(x)
-        x = self.dropout3(x)
         x = self.batchnorm3(x)
+        x = self.dropout3(x)
 
-        x = self.dropout4(x)
+        # x = self.dropout4(x)
 
         # Time-distributed dense layer
         x = self.dense(x)
