@@ -126,7 +126,24 @@ def solve_problem_solving_easy(input: tuple) -> list:
     Returns:
     list: A list of strings representing the solution to the problem.
     """
-    return []
+    strings, top_x = input[0],input[1]
+    # make dictionary of strings with count of occurence of each string
+
+    unique_strings = {}
+    for i in range(len(strings)):
+        # if strings[i] in dict keys add one to value
+        if unique_strings.get(strings[i],None) is not None:
+            unique_strings[strings[i]] += 1
+        else:
+            unique_strings[strings[i]] = 1
+    # sort dictionary by value in descending order and lexigraphically in ascending order if equal
+    # unique_strings = dict(sorted(unique_strings.items(), key=lambda item: (-item[1], item[0])))
+    unique_strings = sorted(unique_strings.items(), key=lambda item: (-item[1], item[0]))
+    unique_strings = unique_strings[:top_x]
+    # return strings
+    return [k[0] for k in unique_strings]
+    # return top x keys of dictionary
+    return list(unique_strings.keys())[:top_x]
 
 
 def solve_problem_solving_medium(input: str) -> str:
@@ -139,7 +156,28 @@ def solve_problem_solving_medium(input: str) -> str:
     Returns:
     str: A string representing the solution to the problem.
     """
-    return ''
+    # ex: of input "3[d1[e2[l]]]"
+    # output: "delldelldell"
+    stack = []
+    # iterate over string
+    for i in range(len(input)):
+        # if character is not "]" push to stack
+        if input[i] != "]":
+            stack.append(input[i])
+        else:
+            # if character is "]" pop from stack until "[" is found
+            temp = ""
+            while stack[-1] != "[":
+                temp = stack.pop() + temp
+            stack.pop()
+            # pop until digit is found
+            num = ""
+            while stack and stack[-1].isdigit():
+                num = stack.pop() + num
+            # push temp * num to stack
+            stack.append(temp*int(num))
+    # return stack as string
+    return ''.join(stack)
 
 
 def solve_problem_solving_hard(input: tuple) -> int:
@@ -152,8 +190,21 @@ def solve_problem_solving_hard(input: tuple) -> int:
     Returns:
     int: An integer representing the solution to the problem.
     """
-    return 0
-
+    # given grid of size m x n and only moves allowed are right and down find number of unique paths from top left to bottom right
+    m,n = input[0],input[1]
+    # create grid of size m x n
+    grid = [[0 for i in range(n)] for j in range(m)]
+    # fill first row and first column with 1
+    for i in range(m):
+        grid[i][0] = 1
+    for i in range(n):
+        grid[0][i] = 1
+    # fill grid with sum of top and left cells
+    for i in range(1,m):
+        for j in range(1,n):
+            grid[i][j] = grid[i-1][j] + grid[i][j-1]
+    # return bottom right cell
+    return grid[-1][-1]
 
 riddle_solvers = {
     'cv_easy': solve_cv_easy,
