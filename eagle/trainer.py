@@ -10,30 +10,25 @@ from sklearn.model_selection import train_test_split
 from dataset import FootPrintDataSet,Split_Data
 
 from config import *
-
+from utils import *
+import sys
 
 # Fixing the seed for reproducibility
 np.random.seed(42)
 torch.manual_seed(42)
-
-def seed_worker(worker_id):
-    """To preserve reproducibility for the randomly shuffled train loader."""
-    worker_seed = torch.initial_seed() % 2**32
-    np.random.seed(worker_seed)
-    random.seed(worker_seed)
 
 class EagleTrainer():
     def __init__(self, model,real_dataset_path: str,fake_dataset_path: str):
         self.model = model
 
         # Move to device
-        # self.model.to(DEVICE)
+        self.model.to(DEVICE)
 
         # create adam optimizer
-        # self.optimizer = optim.Adam(self.model.parameters(), lr=LEARNING_RATE, betas=(BETA_1, BETA_2), weight_decay=WEIGHT_DECAY)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=LEARNING_RATE, betas=(BETA_1, BETA_2), weight_decay=WEIGHT_DECAY)
 
         # create learning rate scheduler
-        # self.lr_scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=SCHEDULAR_STEP_SIZE, gamma=SCHEDULAR_GAMMA)
+        self.lr_scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=SCHEDULAR_STEP_SIZE, gamma=SCHEDULAR_GAMMA)
 
         # Split_Data
         X_train,Y_train,X_val,Y_val,X_test,Y_test=Split_Data(real_dataset_path=real_dataset_path,fake_dataset_path=fake_dataset_path)
@@ -55,7 +50,119 @@ class EagleTrainer():
         self.best_loss = float('inf')
 
     def train(self):
-        pass
+        if DEBUG:
+            print("Start Training")
+        # self.model.train()
+        for epoch in range(EPOCHS):
+            epoch_loss=0
+            for batch_index , (batch_x,batch_y) in enumerate(self.data_loader_train):
+                # Move to Device
+                batch_x=batch_x.to(DEVICE)
+                batch_y=batch_y.to(DEVICE)
+
+                # Forward Pass
+                losses=self.model(batch_x,batch_y)
+                epoch_loss+=losses
+
+                if DEBUG:
+                    print(f'epoch: {epoch+1}, Batch {batch_index + 1}/{len(self.data_loader_train)} losses: {losses:.4f}')
+
+                # Backward pass
+                losses.backward()
+
+                # Learning
+                if (batch_index+1) %ACCUMULATION_STEPS==0:
+                    # update the parameters
+                    self.optimizer.step()
+                    # zero the parameter gradients
+                    self.optimizer.zero_grad()
+                    if DEBUG:
+                        # print(f'[Accumlative Learning after {batch_index+1} steps ] Update Weights at  epoch: {epoch+1}, Batch {batch_index + 1}/{len(self.data_loader_train)} ')
+                        pass
+                
+                # Average Epoch Loss
+                if (batch_index+1)%100==0:
+                    # Every 100 Batch print Average Loss for epoch till Now
+                    print(f'[Every 100 Batch]: Epoch {epoch+1}/{EPOCHS}, Batch {batch_index + 1}/{len(self.data_loader_train)}, Average Cumulative Epoch Loss : {epoch_loss/(batch_index+1):.4f}')
+                   
+
+                    
+               
+            # validate the model no touch :)
+            self.model.eval()
+            validation_average_loss= self.validate_during_training() 
+            if DEBUG:
+                print(f'Validation Average Loss: {validation_average_loss:.4f}')
+            self.model.train()     
+
+            # Learning Rate Schedular
+            self.lr_scheduler.step()
+
+            # Save Model
+            self.save_model(model=self.model,name="eagle",epoch=epoch,validation_loss=validation_average_loss)
+        
+    if DEBUG:
+        print("Training Done")
+
+    def validate_during_training(self): 
+        with torch.no_grad():
+            validation_average_loss=0
+            for batch_index , (batch_x,batch_y) in enumerate(self.data_loader_val):
+                # Move to Device
+                batch_x=batch_x.to(DEVICE)
+                batch_y=batch_y.to(DEVICE)
+
+                # Forward Pass
+                losses=self.model(batch_x,batch_y)
+                validation_average_loss+=losses
+
+            validation_average_loss/=(len(self.data_loader_val))
+            return validation_average_loss
+        
+    def save_model(self,model:torch.nn.Module,name:str,epoch:int,validation_loss:float):
+        '''
+        Save the current state of model.
+        '''
+        if DEBUG:
+            print("Saving "+name+"_epoch "+str(epoch+1))
+        save_model(model=model,name=name+"_epoch_"+str(epoch+1))
+        self.check_best_model(epoch,validation_loss,name,model)  
+
+    def check_best_model(self,epoch:int,validation_loss:float,name:str,model:torch.nn.Module):
+        '''
+        Check if the current model is the best model
+        '''
+        if(validation_loss<=self.best_loss) :
+                self.best_loss=validation_loss
+                save_model(model=model,name=name+"_best")
+                if DEBUG:
+                    print(f"Best Model Updated: {name}_best at epoch {epoch+1} with Average validation loss: {self.best_loss:.4f}")
+
+
+    def test(self):
+        if DEBUG:
+            print("Testing Started")
+
+        self.model.eval()
+        with torch.no_grad():
+            for batch_index , (batch_x,batch_y) in enumerate(self.data_loader_test):
+                pass
+                # # Move to Device
+                # batch_x=batch_x.to(DEVICE)
+                # batch_y=batch_y.to(DEVICE)
+
+                # # Forward Pass
+                # losses=self.model(batch_x,batch_y)
+            
+                # TODO add metric
+            
+        if DEBUG:
+            print("Testing Done")
+
+
+
+
+
 
 
 
@@ -64,6 +171,7 @@ eagle_model=None
 trainer=EagleTrainer(model=eagle_model,real_dataset_path='data/real.npz',fake_dataset_path='data/fake.npz')
 
 trainer.train()
+# trainer.test()
 
 
 
