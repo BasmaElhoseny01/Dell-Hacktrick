@@ -3,13 +3,14 @@ import numpy as np
 from LSBSteg import encode
 from riddle_solvers import riddle_solvers
 
-# api_base_url with ip address of the server = 3.70.97.142 and port 5000
-api_base_url = "http://3.70.97.142:5000/"
+api_base_url = None
+#TODO: Set the api_base_url to the base url of the API when Ready
+# api_base_url = "http://3.70.97.142:5000/"
 team_id= "hAaIrJk"
 
 def init_fox(team_id):
     '''
-    In this fucntion you need to hit to the endpoint to start the game as a fox with your team id.
+    In this function you need to hit to the endpoint to start the game as a fox with your team id.
     If a sucessful response is returned, you will recive back the message that you can break into chunkcs
       and the carrier image that you will encode the chunk in it.
     '''
@@ -46,7 +47,7 @@ def get_riddle(team_id, riddle_id):
     response = response.json() 
     # return the riddle and True
     riddle = response["test_case"]
-    
+
     return riddle,True
 
 

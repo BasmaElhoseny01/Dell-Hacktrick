@@ -1,7 +1,8 @@
 # Add the necessary imports here
 import pandas as pd
 import torch
-from utils import *
+import numpy as np
+# from utils import *
 
 
 def solve_cv_easy(test_case: tuple) -> list:
@@ -22,7 +23,7 @@ def solve_cv_easy(test_case: tuple) -> list:
 
 
 def solve_cv_medium(input: tuple) -> list:
-    combined_image_array , patch_image_array = test_case
+    combined_image_array , patch_image_array = input
     combined_image = np.array(combined_image_array,dtype=np.uint8)
     patch_image = np.array(patch_image_array,dtype=np.uint8)
     """
@@ -40,7 +41,7 @@ def solve_cv_medium(input: tuple) -> list:
 
 
 def solve_cv_hard(input: tuple) -> int:
-    extracted_question, image = test_case
+    extracted_question, image = input
     image = np.array(image)
     """
     This function takes a tuple as input and returns an integer as output.
@@ -57,7 +58,7 @@ def solve_cv_hard(input: tuple) -> int:
 
 
 def solve_ml_easy(input: pd.DataFrame) -> list:
-    data = pd.DataFrame(data)
+    data = pd.DataFrame(input)
 
     """
     This function takes a pandas DataFrame as input and returns a list as output.
@@ -86,7 +87,7 @@ def solve_ml_medium(input: list) -> int:
 
 
 def solve_sec_medium(input: torch.Tensor) -> str:
-    img = torch.tensor(img)
+    img = torch.tensor(input)
     """
     This function takes a torch.Tensor as input and returns a string as output.
 
