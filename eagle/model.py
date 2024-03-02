@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 class GRU(nn.Module):
-    def __init__(self, Tx, n_freq):
+    def __init__(self, Tx=1998, n_freq=101):
         super(GRU, self).__init__()
         input_shape=(Tx, n_freq)
         # Define layers

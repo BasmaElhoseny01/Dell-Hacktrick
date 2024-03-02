@@ -58,7 +58,9 @@ def Split_Data(real_dataset_path:str,fake_dataset_path:str,train_val_test_ratio:
   # Split to Train,test,Validate
   # Split X and Y into training, validation, and testing sets
   X_train, X_test, Y_train, Y_test = train_test_split(spectrogram_data, labels, test_size=0.2, random_state=42)
-  X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=42)
+  # X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, test_size=0.1, random_state=42)
+  X_val=None  
+  Y_val=None  
 
   return X_train,Y_train,X_val,Y_val,X_test,Y_test
 

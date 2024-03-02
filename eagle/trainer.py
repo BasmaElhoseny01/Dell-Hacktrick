@@ -31,19 +31,19 @@ class EagleTrainer():
         self.lr_scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=SCHEDULAR_STEP_SIZE, gamma=SCHEDULAR_GAMMA)
 
         # Split_Data
-        X_train,Y_train,X_val,Y_val,X_test,Y_test=Split_Data(real_dataset_path=real_dataset_path,fake_dataset_path=fake_dataset_path)
+        X_train,Y_train,X_val,Y_val,_,_=Split_Data(real_dataset_path=real_dataset_path,fake_dataset_path=fake_dataset_path)
 
 
         self.train_dataset=FootPrintDataSet(spectrogram_data=X_train,labels=Y_train,transform_type='train')
         self.val_dataset=FootPrintDataSet(spectrogram_data=X_val,labels=Y_val,transform_type='val')
-        self.test_dataset=FootPrintDataSet(spectrogram_data=X_test,labels=Y_test,transform_type='test')
+        # self.test_dataset=FootPrintDataSet(spectrogram_data=X_test,labels=Y_test,transform_type='test')
 
         # create data loader
         g = torch.Generator()
         g.manual_seed(SEED)
         self.data_loader_train = DataLoader(dataset=self.train_dataset,batch_size=BATCH_SIZE, shuffle=True,  num_workers=8, worker_init_fn=seed_worker, generator=g)
         self.data_loader_val   = DataLoader(dataset=self.val_dataset  ,batch_size=BATCH_SIZE, shuffle=False, num_workers=8)
-        self.data_loader_test  = DataLoader(dataset=self.test_dataset ,batch_size=BATCH_SIZE, shuffle=False, num_workers=8)
+        # self.data_loader_test  = DataLoader(dataset=self.test_dataset ,batch_size=BATCH_SIZE, shuffle=False, num_workers=8)
 
 
         # initialize the best loss to a large value
@@ -139,25 +139,25 @@ class EagleTrainer():
                     print(f"Best Model Updated: {name}_best at epoch {epoch+1} with Average validation loss: {self.best_loss:.4f}")
 
 
-    def test(self):
-        if DEBUG:
-            print("Testing Started")
+    # def test(self):
+    #     if DEBUG:
+    #         print("Testing Started")
 
-        self.model.eval()
-        with torch.no_grad():
-            for batch_index , (batch_x,batch_y) in enumerate(self.data_loader_test):
-                pass
-                # # Move to Device
-                # batch_x=batch_x.to(DEVICE)
-                # batch_y=batch_y.to(DEVICE)
+    #     self.model.eval()
+    #     with torch.no_grad():
+    #         for batch_index , (batch_x,batch_y) in enumerate(self.data_loader_test):
+    #             pass
+    #             # # Move to Device
+    #             # batch_x=batch_x.to(DEVICE)
+    #             # batch_y=batch_y.to(DEVICE)
 
-                # # Forward Pass
-                # losses=self.model(batch_x,batch_y)
+    #             # # Forward Pass
+    #             # losses=self.model(batch_x,batch_y)
             
-                # TODO add metric
+    #             # TODO add metric
             
-        if DEBUG:
-            print("Testing Done")
+    #     if DEBUG:
+    #         print("Testing Done")
 
 
 
