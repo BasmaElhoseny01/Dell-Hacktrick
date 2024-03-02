@@ -51,9 +51,15 @@ def test_solve_problem_solving_hard():
     print(output)
     assert output == 6
 
+def test_solve_sec_hard():
+    input = ("266200199BBCDFF1","0123456789ABCDEF")
+    output = solve_sec_hard(input)
+    print("output: ",output)
+    assert output == "4E0E6864B5E1CA52"
 if __name__ =='__main__':
     test_solve_problem_solving_easy()
     test_solve_problem_solving_medium()
     test_solve_problem_solving_hard()
+    test_solve_sec_hard()
 
 

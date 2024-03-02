@@ -2,6 +2,8 @@
 import pandas as pd
 import torch
 import numpy as np
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
 # from utils import *
 
 
@@ -69,6 +71,9 @@ def solve_ml_easy(input: pd.DataFrame) -> list:
     Returns:
     list: A list of floats representing the output of the function.
     """
+    # implement time series forecasting using ARIMA model
+
+
     return []
 
 
@@ -111,8 +116,17 @@ def solve_sec_hard(input:tuple)->str:
     Returns:
     list:A string of ciphered text
     """
-    
-    return ''
+    # implement DES encryption
+    key = input[0]
+    plaintext = input[1]
+    key =   bytes.fromhex(key)
+    plaintext = bytes.fromhex(plaintext)
+    cipher = DES.new(key, DES.MODE_ECB)
+    padded_text = plaintext
+    ciphertext = cipher.encrypt(padded_text)
+    ciphertext = ciphertext.hex()
+    ciphertext = ciphertext.upper()
+    return ciphertext
 
 def solve_problem_solving_easy(input: tuple) -> list:
     """
