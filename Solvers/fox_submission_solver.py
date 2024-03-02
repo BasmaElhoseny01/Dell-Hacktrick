@@ -4,7 +4,7 @@ from LSBSteg import encode
 from riddle_solvers import riddle_solvers
 
 api_base_url = None
-team_id=None
+team_id= "hAaIrJk"
 
 def init_fox(team_id):
     '''

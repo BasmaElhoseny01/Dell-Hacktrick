@@ -2,7 +2,7 @@ import numpy as np
 from LSBSteg import decode
 
 api_base_url = None
-team_id=None
+team_id="hAaIrJk"
 
 
 def init_eagle(team_id):
