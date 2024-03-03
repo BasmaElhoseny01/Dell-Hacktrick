@@ -7,10 +7,11 @@ from torch.utils.data import  DataLoader
 from sklearn.model_selection import train_test_split
 
 
-from dataset import FootPrintDataSet,Split_Data
+from eagle.dataset import FootPrintDataSet,Split_Data
+from eagle.model import GRU
 
-from config import *
-from utils import *
+from eagle.config import *
+from eagle.utils import *
 import sys
 
 # Fixing the seed for reproducibility
@@ -62,6 +63,7 @@ class EagleTrainer():
 
                 # Forward Pass
                 losses=self.model(batch_x,batch_y)
+                sys.exit()
                 epoch_loss+=losses
 
                 if DEBUG:
@@ -101,8 +103,8 @@ class EagleTrainer():
             # Save Model
             self.save_model(model=self.model,name="eagle",epoch=epoch,validation_loss=validation_average_loss)
         
-    if DEBUG:
-        print("Training Done")
+        if DEBUG:
+            print("Training Done")
 
     def validate_during_training(self): 
         with torch.no_grad():
@@ -166,7 +168,7 @@ class EagleTrainer():
 
 
 
-eagle_model=None
+eagle_model=GRU()
 
 trainer=EagleTrainer(model=eagle_model,real_dataset_path='data/real.npz',fake_dataset_path='data/fake.npz')
 
