@@ -6,9 +6,9 @@ from get_eagle import get_eagle_model
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
-# api_base_url = "http://3.70.97.142:5000/"
-# team_id=None
+api_base_url = "http://3.70.97.142:5000/"
 team_id="hAaIrJk"
+# team_id=None
 DEBUG = True
 
 def init_eagle(team_id):
