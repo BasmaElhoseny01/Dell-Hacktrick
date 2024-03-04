@@ -8,8 +8,8 @@ from Solvers.get_eagle import get_eagle_model
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
 api_base_url = "http://3.70.97.142:5000/"
-# team_id="hAaIrJk"
-team_id=None
+team_id="hAaIrJk"
+# team_id=None
 DEBUG = False
 
 def init_eagle(team_id):
@@ -54,6 +54,7 @@ def select_channel(footprint,eagle):
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
     footprint[np.isinf(footprint)] = 65500.0
+    footprint[footprint > 65500.0] = 65500.0
 
     # Remove Last Time step
     footprint=footprint[0:1997,:]
@@ -72,8 +73,11 @@ def select_channel(footprint,eagle):
         else:
             consecutive_ones = 0
     if consecutive_ones >= 10:
+        print("Select Channel(1)")
         return True
-    else: return False
+    else: 
+      print("Select Channel(0)")
+      return False
 
 def skip_msg(team_id):
     '''
@@ -195,7 +199,7 @@ def end_eagle(team_id):
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # response is a string of the status not a json object
-        print(response)
+        print("end_eagle response",response.text)
     else:
         # Print an error message if the request was not successful
         print("Error in (end_eagle):")

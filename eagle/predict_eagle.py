@@ -18,7 +18,7 @@ X_val=preprocessing(X_val)
 print("Minimum value",  np.min(X_val))
 print("Maximum value", np.max(X_val))
 
-class_weights = {0: 1.0, 1: 10.0}  # Example class weights
+class_weights = {0: 1.0, 1: 20.0}  # Example class weights
 @keras.saving.register_keras_serializable()
 # Define weighted binary cross-entropy loss function
 def weighted_binary_crossentropy(y_true, y_pred):
@@ -31,7 +31,7 @@ def weighted_binary_crossentropy(y_true, y_pred):
     return tf.reduce_mean(bce(y_true, y_pred) * weights)
 
 
-loaded_model = load_model('./eagle/model_v4.h5')
+loaded_model = load_model('./eagle/model_v6.h5')
 loaded_model.summary()
 
 loss, acc = loaded_model.evaluate(X_val, Y_val)
