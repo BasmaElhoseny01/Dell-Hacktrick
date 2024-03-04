@@ -1,5 +1,6 @@
 import numpy as np
-from get_eagle import get_eagle_model
+from Solvers.get_eagle import get_eagle_model
+
 
 def check_conectiave_ones(y):
     consecutive_ones = 0

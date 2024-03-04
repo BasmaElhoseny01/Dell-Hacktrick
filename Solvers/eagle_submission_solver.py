@@ -2,7 +2,8 @@ import numpy as np
 from LSBSteg import decode
 import requests
 
-from get_eagle import get_eagle_model
+from Solvers.get_eagle import get_eagle_model
+
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
