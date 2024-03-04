@@ -18,5 +18,6 @@ def weighted_binary_crossentropy(y_true, y_pred):
 def get_eagle_model():
     loaded_model = load_model('./eagle/models/model_v3.h5')
     return loaded_model
+
 # loaded_model=get_eagle_model()
 # loaded_model.summary()
