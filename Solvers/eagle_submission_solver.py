@@ -26,10 +26,8 @@ def init_eagle(team_id):
     response = requests.post(url, json=payload)
     if DEBUG:
         # Print the response
-        try:
-            
-            print("init eagle: ",response.text)
-            print("init eagle: ",response.json())
+        try:            
+            print("init eagle: ",response)
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
@@ -46,6 +44,7 @@ def init_eagle(team_id):
 
 
 def select_channel(footprint,eagle):
+    print("Selecting Channel")
     '''
     According to the footprint you recieved (one footprint per channel)
     you need to decide if you want to listen to any of the 3 channels or just skip this message.
@@ -90,10 +89,8 @@ def skip_msg(team_id):
     response = requests.post(url, json=payload)
     if DEBUG:
         # Print the response
-        try:
-            
-            print("skip eagle: ",response.text)
-            print("skip eagle: ",response.json())
+        try:            
+            print("skip eagle: ",response)
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
@@ -102,7 +99,7 @@ def skip_msg(team_id):
         response_data = response.json()
         # Extracting the secret message and carrier image
         # check if the response_data has the key "footprint"
-        footprints = response_data.get("footprint")
+        footprints = response_data.get("nextFootprint")
         return footprints
     else:
         # Print an error message if the request was not successful
@@ -123,10 +120,8 @@ def request_msg(team_id, channel_id):
     response = requests.post(url, json=payload)
     if DEBUG:
         # Print the response
-        try:
-            
-            print("request_msg eagle: ",response.text)
-            print("request_msg eagle: ",response.json())
+        try:            
+            print("request_msg eagle: ",response)
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
@@ -160,10 +155,8 @@ def submit_msg(team_id, decoded_msg):
     response = requests.post(url, json=payload)
     if DEBUG:
         # Print the response
-        try:
-            
-            print("submit_msg eagle: ",response.text)
-            print("submit_msg eagle: ",response.json())
+        try:            
+            print("submit_msg eagle: ",response)
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
@@ -196,8 +189,7 @@ def end_eagle(team_id):
     if DEBUG:
         # Print the response
         try:
-            
-            print("end eagle: ",response.text)
+            print("end eagle: ",response)
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
@@ -250,11 +242,13 @@ def submit_eagle_attempt(team_id):
                     channel_id = i
                     break
             if listen:
+                print("listening on channel: ",channel_id)
                 # call request_msg to get the message
                 secret_message = request_msg(team_id, channel_id)
                 # check if the secret_message is None
                 if secret_message is None:
                     return False
+                print("Started Decoding")
                 # decode the message
                 decoded_msg = decode(secret_message)
 
@@ -262,12 +256,16 @@ def submit_eagle_attempt(team_id):
                 print("decoded message: ",decoded_msg)
                 # call submit_msg to submit the message
                 footprints = submit_msg(team_id, decoded_msg)
+                print("submit_msg() Submitted Successfully")
+
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
             else:
+                print("Before skip_msg()")
                 # call skip_msg to skip the message
                 footprints = skip_msg(team_id)
+                print("skip_msg() Skipped Successfully")
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
