@@ -2,11 +2,13 @@ import numpy as np
 from LSBSteg import decode
 import requests
 
+from get_eagle import get_eagle_model
+
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
 # api_base_url = "http://3.70.97.142:5000/"
-team_id="hAaIrJk"
-
+# team_id="hAaIrJk"
+team_id=None
 
 def init_eagle(team_id):
     '''
@@ -33,13 +35,36 @@ def init_eagle(team_id):
     return None
 
 
-def select_channel(footprint):
+def select_channel(footprint,eagle):
     '''
     According to the footprint you recieved (one footprint per channel)
     you need to decide if you want to listen to any of the 3 channels or just skip this message.
     Your goal is to try to catch all the real messages and skip the fake and the empty ones.
     Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.        
     '''
+    # footprint is a numpy array [(1998,101)]
+    # Preprocessing
+    footprint[np.isinf(footprint)] = 65500.0
+    # Remove Last Time step
+    if np.shape(footprint)[0]>1997:
+        footprint=footprint[0:1997,:]
+
+    y=eagle.predict(np.expand_dims(footprint, axis=0))
+
+    # Threshold on the Probability
+    y=y[0]>0.5
+
+    consecutive_ones = 0
+    for num in y:
+        if num == 1:
+            consecutive_ones += 1
+            if consecutive_ones >= 10:
+                break
+        else:
+            consecutive_ones = 0
+    if consecutive_ones >= 10:
+        return True
+    else: return False
     pass
 
 def skip_msg(team_id):
@@ -159,6 +184,9 @@ def submit_eagle_attempt(team_id):
         4. Submit your answer in case you listened on any channel
         5. End the Game
     '''
+    # Get Eagle Model Before Initializing the Game :D
+    eagle_model=get_eagle_model()
+    
     footprints = init_eagle(team_id)
     # check if the footprints is None
     if footprints is None:
@@ -180,7 +208,7 @@ def submit_eagle_attempt(team_id):
                 spectogram = np.array(spectogram)
                 # check if the spectogram is empty
                 # call select_channel to decide if to listen on the channel or not
-                if select_channel(spectogram):
+                if select_channel(spectogram,eagle_model):
                     listen = True
                     channel_id = i
                     break
@@ -217,3 +245,4 @@ def submit_eagle_attempt(team_id):
 
 
 submit_eagle_attempt(team_id)
+
