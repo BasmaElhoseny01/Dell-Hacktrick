@@ -4,11 +4,11 @@ import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
-api_base_url = None
+# api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
-# api_base_url = "http://3.70.97.142:5000"
-# team_id= "hAaIrJk"
-team_id= ""
+api_base_url = "http://3.70.97.142:5000"
+team_id= "hAaIrJk"
+# team_id= ""
 
 def init_fox(team_id):
     '''
@@ -49,7 +49,9 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
     i=0
     real_messages=[]
     while i<len(message):
-        random_index=random.choice([1, 2, 3,4])
+        random_index=random.choice([5,6,7,8,9])
+        if i+random_index>len(message):
+            random_index=len(message)-i
         real_messages.append(message[i:i+random_index])
         i+=random_index
     #encode real messages 
@@ -63,7 +65,7 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
         #choose a random image carrier to encode the message
         image_carrier_real_index = random.choice([0,1,2])
         #encode the message in the image carrier
-        encoded_message=encode(image_carrier[image_carrier_real_index], real_message).tolist()
+        encoded_message=encode(image_carrier, real_message).tolist()
         array_message[image_carrier_real_index] = encoded_message
         entities_message[image_carrier_real_index] = "R"
 
@@ -72,12 +74,12 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
             # append Fake message in the other two channels
             fake_message_index = [0,1,2]
             fake_message_index.remove(image_carrier_real_index)
-            if len(real_message)<2:
+            if len(real_message)<7:
                 random_element = random.choice(fake_message_index)
                 fake_message_index.remove(random_element)
             #intialize fake message with the original image carrier
             for i in fake_message_index:
-                fake_messag_encode=encode(image_carrier[i], "Dell").tolist()
+                fake_messag_encode=encode(image_carrier, "dell "+real_message[::-1]).tolist()
                 array_message[i] =fake_messag_encode
                 entities_message[i] = "F"
                 num_of_fake_messages-=1
@@ -85,7 +87,7 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
         #insert empty message
         for i, entity in enumerate(entities_message):
             if entity=="E":
-                empty_messag_encode=encode(image_carrier[i], "").tolist()
+                empty_messag_encode=encode(image_carrier, "").tolist()
                 array_message[i] =empty_messag_encode
 
         entities_messages.append(entities_message)
@@ -118,10 +120,11 @@ def get_riddle(team_id, riddle_id):
         # Parse the JSON response
         response_data = response.json()
         test_case = response_data.get("test_case")
+        print(response_data)
     else:
         # Print an error message if the request was not successful
         return None,False
-
+    
     return test_case,True
 
 
@@ -239,19 +242,26 @@ def submit_fox_attempt(team_id):
     for riddle_id in riddle_solvers:
         try:
             test_case ,riddle_exist= get_riddle(team_id, riddle_id)
+
             if not riddle_exist:
                 continue
-            solution,fake_num = riddle_solvers[riddle_id](test_case)
+            
+            solution = riddle_solvers[riddle_id](test_case)
             status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
-            #TODO:
+            print("total_budget",total_budget)    
+            print("riddel id",riddle_id,"status",status)
+
             if Done and status:
                 num_of_fake_messages+=reddle_points[riddle_id]
         except:
             continue
+    print("num_of_fake_messages",num_of_fake_messages)
+
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
     #5. Send the messages
+    print("array_messages",len(array_messages))
     for i in range(len(array_messages)):
         try:
             status = send_message(team_id, array_messages[i], entities_messages[i])
