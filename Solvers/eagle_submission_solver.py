@@ -8,9 +8,9 @@ from Solvers.get_eagle import get_eagle_model
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
 api_base_url = "http://3.70.97.142:5000/"
-team_id="hAaIrJk"
-# team_id=None
-DEBUG = True
+# team_id="hAaIrJk"
+team_id=None
+DEBUG = False
 
 def init_eagle(team_id):
     '''
@@ -41,7 +41,7 @@ def init_eagle(team_id):
         return footprints
     else:
         # Print an error message if the request was not successful
-        print("Error:", response.text)
+        print("Error in (init_eagle):")
     return None
 
 
@@ -106,7 +106,7 @@ def skip_msg(team_id):
         return footprints
     else:
         # Print an error message if the request was not successful
-        print("Error:", response.text)
+        print("Error in (skip_msg):")
     return None
 
 
@@ -141,7 +141,7 @@ def request_msg(team_id, channel_id):
         return secret_message
     else:
         # Print an error message if the request was not successful
-        print("Error:", response.text)
+        print("Error in (request_msg):")
     return None
 
 def submit_msg(team_id, decoded_msg):
@@ -178,7 +178,7 @@ def submit_msg(team_id, decoded_msg):
         return footprints
     else:
         # Print an error message if the request was not successful
-        print("Error:", response.text)
+        print("Error in (submit_msg):")
   
 def end_eagle(team_id):
     '''
@@ -198,17 +198,15 @@ def end_eagle(team_id):
         try:
             
             print("end eagle: ",response.text)
-            print("end eagle: ",response.json())
         except Exception as e:
             print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # response is a string of the status not a json object
-        response_data = response.json()
-        print(response_data)
+        print(response)
     else:
         # Print an error message if the request was not successful
-        print("Error:", response.text)
+        print("Error in (end_eagle):")
     return None
 
 def submit_eagle_attempt(team_id):
@@ -284,4 +282,5 @@ def submit_eagle_attempt(team_id):
 
 
 submit_eagle_attempt(team_id)
+# print("Bamsa")
 
