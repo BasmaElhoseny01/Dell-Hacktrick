@@ -88,21 +88,21 @@ def solve_puzzle(pieces):
     return puzzle_order
 
 if __name__ =='__main__':
-    # test_solve_problem_solving_easy()
-    # test_solve_problem_solving_medium()
-    # test_solve_problem_solving_hard()
-    # test_solve_sec_hard()
+    test_solve_problem_solving_easy()
+    test_solve_problem_solving_medium()
+    test_solve_problem_solving_hard()
+    test_solve_sec_hard()
     # read image
-    image = cv2.imread('Riddles\cv_easy_example\shredded.jpg')
-    # split image into pieces each peice has width 64 and the image height until the end
-    pieces = [image[:, i:i + 64] for i in range(0, image.shape[1], 64)]
-    print(pieces[0])
-    oreder=solve_puzzle(pieces)
-    # concatenate the pieces in the order of the puzzle
-    puzzle = np.concatenate([pieces[i] for i in oreder], axis=1)
-    # show the puzzle
+    # image = cv2.imread('Riddles\cv_easy_example\shredded.jpg')
+    # # split image into pieces each peice has width 64 and the image height until the end
+    # pieces = [image[:, i:i + 64] for i in range(0, image.shape[1], 64)]
+    # print(pieces[0])
+    # oreder=solve_puzzle(pieces)
+    # # concatenate the pieces in the order of the puzzle
+    # puzzle = np.concatenate([pieces[i] for i in oreder], axis=1)
+    # # show the puzzle
 
-    cv2.imshow('puzzle', puzzle)
-    cv2.waitKey(0)
+    # cv2.imshow('puzzle', puzzle)
+    # cv2.waitKey(0)
 
 

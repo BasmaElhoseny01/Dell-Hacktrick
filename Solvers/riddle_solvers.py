@@ -116,6 +116,8 @@ def solve_sec_hard(input:tuple)->str:
     Returns:
     list:A string of ciphered text
     """
+    # convert input to correct format
+    input = tuple(input)
     # implement DES encryption
     key = input[0]
     plaintext = input[1]
@@ -140,6 +142,8 @@ def solve_problem_solving_easy(input: tuple) -> list:
     Returns:
     list: A list of strings representing the solution to the problem.
     """
+    # convert input to correct format
+    input = tuple(input)
     strings, top_x = input[0],input[1]
     # make dictionary of strings with count of occurence of each string
 
@@ -172,6 +176,8 @@ def solve_problem_solving_medium(input: str) -> str:
     """
     # ex: of input "3[d1[e2[l]]]"
     # output: "delldelldell"
+    # convert input to correct format
+    input = str(input)
     stack = []
     # iterate over string
     for i in range(len(input)):
@@ -204,6 +210,8 @@ def solve_problem_solving_hard(input: tuple) -> int:
     Returns:
     int: An integer representing the solution to the problem.
     """
+    # convert input to correct format
+    input = tuple(input)
     # given grid of size m x n and only moves allowed are right and down find number of unique paths from top left to bottom right
     m,n = input[0],input[1]
     # create grid of size m x n
