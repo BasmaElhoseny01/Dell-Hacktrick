@@ -45,6 +45,10 @@ def select_channel(footprint,eagle):
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
     footprint[np.isinf(footprint)] = 65500.0
+    # Remove Last Time step
+    if np.shape(footprint)[0]>1997:
+        footprint=footprint[0:1997,:]
+
     y=eagle.predict(np.expand_dims(footprint, axis=0))
 
     # Threshold on the Probability
@@ -180,14 +184,15 @@ def submit_eagle_attempt(team_id):
         4. Submit your answer in case you listened on any channel
         5. End the Game
     '''
+    # Get Eagle Model Before Initializing the Game :D
+    eagle_model=get_eagle_model()
+    
     footprints = init_eagle(team_id)
     # check if the footprints is None
     if footprints is None:
         return False
     
     try:
-        # Get Eagle Model
-        eagle_model=get_eagle_model()
         break_loop = False
         while True:
             if break_loop:
