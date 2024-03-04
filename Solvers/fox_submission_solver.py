@@ -4,11 +4,12 @@ import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
-# api_base_url = None
+api_base_url = None
+team_id= ""
 #TODO: Set the api_base_url to the base url of the API when Ready
-api_base_url = "http://3.70.97.142:5000"
-team_id= "hAaIrJk"
-# team_id= ""
+# api_base_url = "http://3.70.97.142:5000"
+# team_id= "hAaIrJk"
+Debug=False
 
 def init_fox(team_id):
     '''
@@ -22,6 +23,8 @@ def init_fox(team_id):
     payload = {"teamId": team_id}
     # Make the API request
     response = requests.post(url, json=payload)
+    if Debug:
+        print("init : ",response)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -120,9 +123,12 @@ def get_riddle(team_id, riddle_id):
         # Parse the JSON response
         response_data = response.json()
         test_case = response_data.get("test_case")
-        print(response_data)
+        if Debug:
+            print("get_riddle :",response_data)
     else:
         # Print an error message if the request was not successful
+        if Debug:
+            print("Error get_riddle :", response.text)
         return None,False
     
     return test_case,True
@@ -142,6 +148,8 @@ def solve_riddle(team_id, solution):
                }
     # Make the API request
     response = requests.post(url, json=payload)
+    if Debug:
+        print("solve_riddle",response)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -151,9 +159,13 @@ def solve_riddle(team_id, solution):
         status=response_data.get("status")
     else:
         # Print an error message if the request was not successful
+        if Debug:
+            print("Error solve_riddle :", response.text)
         return None,None,None,None,False
     if status == "success":
         # return True  and total budget and additional budget
+        if Debug:
+            print("solve_riddle: ",total_budget)
         return True, total_budget, budget_increase,True
     else:
         # return False and the correct solution
@@ -179,12 +191,20 @@ def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
         # Parse the JSON response
         response_data = response.json()
         status = response_data.get("status")
+        if Debug:
+            print("send_message: ",response_data)
     else:
         # Print an error message if the request was not successful
+        if Debug:
+            print("Error send_message : ", response.text)
         False
     if status == "success":
+        if Debug:
+            print("send_message Done: ",status)
         return True
     else:
+        if Debug:
+            print("send_message Failed: ",status)
         return False
 
    
@@ -248,20 +268,23 @@ def submit_fox_attempt(team_id):
             
             solution = riddle_solvers[riddle_id](test_case)
             status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
-            print("total_budget",total_budget)    
-            print("riddel id",riddle_id,"status",status)
+            if Debug:
+                print("total_budget",total_budget)    
+                print("riddel id",riddle_id,"status",status)
 
             if Done and status:
                 num_of_fake_messages+=reddle_points[riddle_id]
         except:
             continue
-    print("num_of_fake_messages",num_of_fake_messages)
+    if Debug:
+        print("num_of_fake_messages",num_of_fake_messages)
 
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
     #5. Send the messages
-    print("array_messages",len(array_messages))
+    if Debug:
+        print("array_messages",len(array_messages))
     for i in range(len(array_messages)):
         try:
             status = send_message(team_id, array_messages[i], entities_messages[i])
