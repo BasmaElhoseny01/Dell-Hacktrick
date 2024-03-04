@@ -9,6 +9,7 @@ api_base_url = None
 # api_base_url = "http://3.70.97.142:5000/"
 # team_id="hAaIrJk"
 team_id=None
+DEBUG = True
 
 def init_eagle(team_id):
     '''
@@ -22,6 +23,14 @@ def init_eagle(team_id):
     payload = {"teamId": team_id}
     # Make the API request
     response = requests.post(url, json=payload)
+    if DEBUG:
+        # Print the response
+        try:
+            
+            print("init eagle: ",response.text)
+            print("init eagle: ",response.json())
+        except Exception as e:
+            print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -78,6 +87,14 @@ def skip_msg(team_id):
     payload = {"teamId": team_id}
     # Make the API request
     response = requests.post(url, json=payload)
+    if DEBUG:
+        # Print the response
+        try:
+            
+            print("skip eagle: ",response.text)
+            print("skip eagle: ",response.json())
+        except Exception as e:
+            print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -103,6 +120,14 @@ def request_msg(team_id, channel_id):
     payload = {"teamId": team_id, "channelId": channel_id}
     # Make the API request
     response = requests.post(url, json=payload)
+    if DEBUG:
+        # Print the response
+        try:
+            
+            print("request_msg eagle: ",response.text)
+            print("request_msg eagle: ",response.json())
+        except Exception as e:
+            print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -132,6 +157,14 @@ def submit_msg(team_id, decoded_msg):
     payload = {"teamId": team_id, "decodedMsg": decoded_msg}
     # Make the API request
     response = requests.post(url, json=payload)
+    if DEBUG:
+        # Print the response
+        try:
+            
+            print("submit_msg eagle: ",response.text)
+            print("submit_msg eagle: ",response.json())
+        except Exception as e:
+            print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -159,8 +192,14 @@ def end_eagle(team_id):
     payload = {"teamId": team_id}
     # Make the API request
     response = requests.post(url, json=payload)
-    print(response)
-    print(response.text)
+    if DEBUG:
+        # Print the response
+        try:
+            
+            print("end eagle: ",response.text)
+            print("end eagle: ",response.json())
+        except Exception as e:
+            print(e)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # response is a string of the status not a json object
