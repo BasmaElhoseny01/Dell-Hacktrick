@@ -45,9 +45,9 @@ def select_channel(footprint,eagle):
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
     footprint[np.isinf(footprint)] = 65500.0
+
     # Remove Last Time step
-    if np.shape(footprint)[0]>1997:
-        footprint=footprint[0:1997,:]
+    footprint=footprint[0:1997,:]
 
     y=eagle.predict(np.expand_dims(footprint, axis=0))
 
@@ -65,7 +65,6 @@ def select_channel(footprint,eagle):
     if consecutive_ones >= 10:
         return True
     else: return False
-    pass
 
 def skip_msg(team_id):
     '''
