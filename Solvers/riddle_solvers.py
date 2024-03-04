@@ -5,6 +5,7 @@ import numpy as np
 from Crypto.Cipher import DES
 from Crypto.Util.Padding import pad, unpad
 from SteganoGAN.utils import *
+from transformers import pipeline
 
 
 def solve_cv_easy(test_case: tuple) -> list:
@@ -60,7 +61,6 @@ def solve_cv_medium(input: tuple) -> list:
 
 def solve_cv_hard(input: tuple) -> int:
     extracted_question, image = input
-    image = np.array(image)
     """
     This function takes a tuple as input and returns an integer as output.
 
@@ -72,7 +72,11 @@ def solve_cv_hard(input: tuple) -> int:
     Returns:
     int: An integer representing the answer to the question about the image.
     """
-    return 0
+    vqa_pipeline = pipeline("visual-question-answering")
+
+    answer=vqa_pipeline(image, extracted_question, top_k=1)
+
+    return answer[0]['answer']
 
 
 def solve_ml_easy(input: pd.DataFrame) -> list:
@@ -245,9 +249,9 @@ def solve_problem_solving_hard(input: tuple) -> int:
     return grid[-1][-1]
 
 riddle_solvers = {
-    # 'cv_easy': solve_cv_easy,
+    'cv_easy': solve_cv_easy,
     # 'cv_medium': solve_cv_medium,
-    # 'cv_hard': solve_cv_hard,
+    'cv_hard': solve_cv_hard,
     # 'ml_easy': solve_ml_easy,
     # 'ml_medium': solve_ml_medium,
     'sec_medium_stegano': solve_sec_medium,
@@ -258,9 +262,9 @@ riddle_solvers = {
 }
 
 reddle_points = {
-    # 'cv_easy': 1,
+    'cv_easy': 1,
     # 'cv_medium': 2,
-    # 'cv_hard': 3,
+    'cv_hard': 3,
     # 'ml_easy': 1,
     # 'ml_medium': 2,
     'sec_medium_stegano': 2,
