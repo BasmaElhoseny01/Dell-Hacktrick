@@ -3,4 +3,3 @@
 *.npy
 eagle/data/fake_counts.csv
 eagle/data/real_counts.csv
-*.keras
