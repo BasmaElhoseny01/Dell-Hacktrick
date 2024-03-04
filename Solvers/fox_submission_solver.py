@@ -4,12 +4,12 @@ import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
-api_base_url = None
-team_id= ""
+# api_base_url = None
+# team_id= ""
 #TODO: Set the api_base_url to the base url of the API when Ready
-# api_base_url = "http://3.70.97.142:5000"
-# team_id= "hAaIrJk"
-Debug=False
+api_base_url = "http://3.70.97.142:5000"
+team_id= "hAaIrJk"
+Debug=True
 
 def init_fox(team_id):
     '''
@@ -119,6 +119,9 @@ def get_riddle(team_id, riddle_id):
     # Make the API request
     response = requests.post(url, json=payload)
     # Check if the request was successful (status code 200)
+    if Debug:
+        print("get_riddle respons : ",response)
+        print("get_riddle respons : ",response.json())
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
         response_data = response.json()
@@ -149,7 +152,8 @@ def solve_riddle(team_id, solution):
     # Make the API request
     response = requests.post(url, json=payload)
     if Debug:
-        print("solve_riddle",response)
+        print("solve_riddle : ",response)
+        print("solve_riddle : ",response.json())
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -186,6 +190,9 @@ def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
                }
     # Make the API request
     response = requests.post(url, json=payload)
+    if Debug:
+        print("send_message: ",response)
+        print("send_message: ",response.json())
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -264,6 +271,8 @@ def submit_fox_attempt(team_id):
             test_case ,riddle_exist= get_riddle(team_id, riddle_id)
 
             if not riddle_exist:
+                if Debug:
+                    print("riddle not exist ",riddle_id)
                 continue
             
             solution = riddle_solvers[riddle_id](test_case)
@@ -275,6 +284,8 @@ def submit_fox_attempt(team_id):
             if Done and status:
                 num_of_fake_messages+=reddle_points[riddle_id]
         except:
+            if Debug:
+                print("error in riddle ",riddle_id)
             continue
     if Debug:
         print("num_of_fake_messages",num_of_fake_messages)
@@ -289,6 +300,8 @@ def submit_fox_attempt(team_id):
         try:
             status = send_message(team_id, array_messages[i], entities_messages[i])
         except:
+            if Debug:
+                print("error in sending message ",i)
             continue
     #6. End the Game
     end_fox(team_id)

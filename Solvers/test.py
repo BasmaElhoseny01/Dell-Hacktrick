@@ -32,8 +32,8 @@ riddle_solvers = {
     'problem_solving_hard': solve_problem_solving_hard
 }
 reddle_points = {
-    'cv_easy': 1,
-    'cv_medium': 2,
+    "cv_easy": 1,
+    "cv_medium": 2,
     'cv_hard': 3,
     'ml_easy': 1,
     'ml_medium': 2,
@@ -43,6 +43,10 @@ reddle_points = {
     'problem_solving_medium': 2,
     'problem_solving_hard': 3
 }
-for riddle_id in riddle_solvers:
-    print(f"Testing {riddle_id}... points: {reddle_points[riddle_id]}")
-    print(type(reddle_points[riddle_id]))
+team_id="1322"
+for riddle_id in riddle_solvers.keys():
+    payload = {
+        "team_id": team_id,
+        "riddle_id": str(riddle_id),
+    }
+    print(payload)
