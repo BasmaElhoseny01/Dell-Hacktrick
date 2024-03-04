@@ -18,7 +18,7 @@ X_val=preprocessing(X_val)
 print("Minimum value",  np.min(X_val))
 print("Maximum value", np.max(X_val))
 
-class_weights = {0: 1.0, 1: 10.0}  # Example class weights
+class_weights = {0: 1.0, 1: 20.0}  # Example class weights
 @keras.saving.register_keras_serializable()
 # Define weighted binary cross-entropy loss function
 def weighted_binary_crossentropy(y_true, y_pred):

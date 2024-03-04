@@ -6,7 +6,7 @@ from keras.models import load_model
 @keras.saving.register_keras_serializable()
 # Define weighted binary cross-entropy loss function
 def weighted_binary_crossentropy(y_true, y_pred):
-    class_weights = {0: 1.0, 1: 10.0}  # Example class weights
+    class_weights = {0: 1.0, 1: 20.0}  # Example class weights
     # Clip predicted values to prevent log(0) and log(1) cases
     y_pred = tf.clip_by_value(y_pred, 1e-7, 1 - 1e-7)
 
