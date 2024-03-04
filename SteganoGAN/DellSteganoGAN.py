@@ -1,4 +1,4 @@
-from utils import *
+from SteganoGAN.utils import *
 import numpy as np
 
 def stegano_solver(cover_im: np.ndarray, message: str) -> str:

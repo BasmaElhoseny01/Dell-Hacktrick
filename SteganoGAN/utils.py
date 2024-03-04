@@ -2,8 +2,8 @@ import torch
 from collections import Counter
 from reedsolo import RSCodec
 import zlib
-from decoders import DenseDecoder
-from critics import BasicCritic
+from SteganoGAN.decoders import DenseDecoder
+from SteganoGAN.critics import BasicCritic
 
 import torch
 from torch.optim import Adam

@@ -2,12 +2,13 @@ import requests
 import numpy as np
 import random
 from LSBSteg import encode
-from riddle_solvers import riddle_solvers, reddle_points
+from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
 # api_base_url = "http://3.70.97.142:5000"
-team_id= "hAaIrJk"
+# team_id= "hAaIrJk"
+team_id= ""
 
 def init_fox(team_id):
     '''
@@ -236,18 +237,24 @@ def submit_fox_attempt(team_id):
     # iterate on ridele_solvers
     num_of_fake_messages=0
     for riddle_id in riddle_solvers:
-        test_case = get_riddle(team_id, riddle_id)
-        solution,fake_num = riddle_solvers[riddle_id](test_case)
-        status, total_budget, budget_increase,_ = solve_riddle(team_id, solution)
-        #TODO:
-        if status:
-            num_of_fake_messages+=reddle_points[riddle_id]
+        try:
+            test_case = get_riddle(team_id, riddle_id)
+            solution,fake_num = riddle_solvers[riddle_id](test_case)
+            status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
+            #TODO:
+            if Done and status:
+                num_of_fake_messages+=reddle_points[riddle_id]
+        except:
+            continue
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
     #5. Send the messages
     for i in range(len(array_messages)):
-        status = send_message(team_id, array_messages[i], entities_messages[i])
+        try:
+            status = send_message(team_id, array_messages[i], entities_messages[i])
+        except:
+            continue
     #6. End the Game
     end_fox(team_id)
     
