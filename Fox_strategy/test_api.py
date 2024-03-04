@@ -1,7 +1,7 @@
 import requests
 import numpy as np
 api_base_url = "http://localhost:3000"
-team_id= "hAaIrJk"
+team_id= "8"
 def fox_test(team_id):
     '''
     In this fucntion you need to hit to the endpoint to start the game as a fox with your team id.
