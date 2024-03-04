@@ -4,7 +4,7 @@ import torch
 import numpy as np
 from Crypto.Cipher import DES
 from Crypto.Util.Padding import pad, unpad
-# from utils import *
+from SteganoGAN.utils import *
 
 
 def solve_cv_easy(test_case: tuple) -> list:
@@ -102,7 +102,7 @@ def solve_sec_medium(input: torch.Tensor) -> str:
     Returns:
     str: A string representing the decoded message from the image.
     """
-    return ''
+    return decode(img)
 
 def solve_sec_hard(input:tuple)->str:
     """
