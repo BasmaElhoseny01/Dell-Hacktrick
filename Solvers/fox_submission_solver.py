@@ -112,7 +112,7 @@ def get_riddle(team_id, riddle_id):
                "riddleId":riddle_id
                }
     # Make the API request
-    response = requests.get(url, json=payload)
+    response = requests.post(url, json=payload)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -205,7 +205,7 @@ def end_fox(team_id):
     #     response_data = response
         # save the response in txt file
     with open("end_game_response.txt", "w") as file:
-        file.write(str(response))
+        file.write(str(response.text))
     # else:
     #     # Print an error message if the request was not successful
     #     with open("end_game_response.txt", "w") as file:
@@ -238,7 +238,9 @@ def submit_fox_attempt(team_id):
     num_of_fake_messages=0
     for riddle_id in riddle_solvers:
         try:
-            test_case = get_riddle(team_id, riddle_id)
+            test_case ,riddle_exist= get_riddle(team_id, riddle_id)
+            if not riddle_exist:
+                continue
             solution,fake_num = riddle_solvers[riddle_id](test_case)
             status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
             #TODO:
