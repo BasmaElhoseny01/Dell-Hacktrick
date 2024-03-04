@@ -2,7 +2,7 @@ import requests
 import numpy as np
 import random
 from LSBSteg import encode
-from riddle_solvers import riddle_solvers
+from riddle_solvers import riddle_solvers, reddle_points
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
@@ -241,7 +241,7 @@ def submit_fox_attempt(team_id):
         status, total_budget, budget_increase,_ = solve_riddle(team_id, solution)
         #TODO:
         if status:
-            num_of_fake_messages+=fake_num
+            num_of_fake_messages+=reddle_points[riddle_id]
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)

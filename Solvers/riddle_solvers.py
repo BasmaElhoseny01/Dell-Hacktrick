@@ -232,3 +232,16 @@ riddle_solvers = {
     'problem_solving_medium': solve_problem_solving_medium,
     'problem_solving_hard': solve_problem_solving_hard
 }
+
+reddle_points = {
+    'cv_easy': 1,
+    'cv_medium': 2,
+    'cv_hard': 3,
+    'ml_easy': 1,
+    'ml_medium': 2,
+    'sec_medium_stegano': 2,
+    'sec_hard':3,
+    'problem_solving_easy': 1,
+    'problem_solving_medium': 2,
+    'problem_solving_hard': 3
+}
