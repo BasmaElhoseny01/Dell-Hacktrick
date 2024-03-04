@@ -4,11 +4,11 @@ import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
-# api_base_url = None
-# team_id= ""
+api_base_url = None
+team_id= ""
 #TODO: Set the api_base_url to the base url of the API when Ready
-api_base_url = "http://3.70.97.142:5000"
-team_id= "hAaIrJk"
+# api_base_url = "http://3.70.97.142:5000"
+# team_id= "hAaIrJk"
 Debug=True
 
 def init_fox(team_id):

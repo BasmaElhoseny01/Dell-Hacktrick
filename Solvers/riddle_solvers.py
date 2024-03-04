@@ -21,7 +21,23 @@ def solve_cv_easy(test_case: tuple) -> list:
     Returns:
     list: A list of integers representing the order of shreds. When combined in this order, it builds the whole image.
     """
-    return []
+    # slice image be shred_width vertically
+    sliced_image = [shredded_image[:, i * shred_width: (i + 1) * shred_width] for i in range(shredded_image.shape[1] // shred_width)]
+    current_shred = sliced_image[0]
+    order = [0]
+    while len(order) < len(sliced_image):
+        best_match = -1
+        best_similarity = 0
+        for shred_index in range(len(sliced_image)):
+            if shred_index not in order:
+                similarity = np.sum(current_shred[:,-1] == sliced_image[shred_index][:,0])
+                if similarity > best_similarity:
+                    best_similarity = similarity
+                    best_match = shred_index
+        order.append(best_match)
+        current_shred = sliced_image[best_match]
+
+    return order
 
 
 def solve_cv_medium(input: tuple) -> list:
