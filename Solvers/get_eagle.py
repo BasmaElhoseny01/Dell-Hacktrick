@@ -6,7 +6,7 @@ from keras.models import load_model
 @keras.saving.register_keras_serializable()
 # Define weighted binary cross-entropy loss function
 def weighted_binary_crossentropy(y_true, y_pred):
-    class_weights = {0: 1.0, 1: 20.0}  # Example class weights
+    class_weights = {0: 1.0, 1: 10.0}  # Example class weights
     # Clip predicted values to prevent log(0) and log(1) cases
     y_pred = tf.clip_by_value(y_pred, 1e-7, 1 - 1e-7)
 
@@ -16,7 +16,7 @@ def weighted_binary_crossentropy(y_true, y_pred):
     return tf.reduce_mean(bce(y_true, y_pred) * weights)
 
 def get_eagle_model():
-    loaded_model = load_model('./eagle/models/model_v8.h5')
+    loaded_model = load_model('./eagle/models/model_v10.h5')
     return loaded_model
 
 # loaded_model=get_eagle_model()

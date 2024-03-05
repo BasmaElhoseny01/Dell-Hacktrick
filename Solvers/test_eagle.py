@@ -1,6 +1,6 @@
 import numpy as np
 from Solvers.get_eagle import get_eagle_model
-import time
+import datetime
 
 def check_conectiave_ones(y):
     consecutive_ones = 0
@@ -15,23 +15,23 @@ def check_conectiave_ones(y):
         return True
     else: return False
 
+
 def select_channel(footprint,eagle):
+    print("Selecting Channel")
     '''
     According to the footprint you recieved (one footprint per channel)
     you need to decide if you want to listen to any of the 3 channels or just skip this message.
     Your goal is to try to catch all the real messages and skip the fake and the empty ones.
     Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.        
     '''
-    timestamp = str(int(time.time()))
+    # Save file named by timestamp
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
+    # Create a filename using the timestamp
     np.save(f'/content/footprint_{timestamp}.npy', footprint)
+
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
     footprint[np.isinf(footprint)] = 65500.0
-    footprint[np.isinf(footprint)] = 65500.0
-    footprint[footprint > 65500.0] = 65500.0
-    
-    footprint=footprint.astype(np.uint16)
-    footprint=footprint.astype(np.float16)/(2.0**16)
 
     # Remove Last Time step
     footprint=footprint[0:1997,:]
@@ -50,8 +50,11 @@ def select_channel(footprint,eagle):
         else:
             consecutive_ones = 0
     if consecutive_ones >= 10:
+        print("Select Channel(1)")
         return True
-    else: return False
+    else: 
+      print("Select Channel(0)")
+      return False
     
 def check_result(predictions):
     gold_labels=np.load('./eagle/data/Y_val.npy')
