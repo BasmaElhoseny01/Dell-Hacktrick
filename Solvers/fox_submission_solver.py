@@ -84,7 +84,7 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
                 fake_message_index.remove(random_element)
             #intialize fake message with the original image carrier
             for i in fake_message_index:
-                fake_messag_encode=encode(image_carrier, real_message[::-1]).tolist()
+                fake_messag_encode=encode(image_carrier,  "dell "+real_message[::-1]).tolist()
                 array_message[i] =fake_messag_encode
                 entities_message[i] = "F"
                 num_of_fake_messages-=1
