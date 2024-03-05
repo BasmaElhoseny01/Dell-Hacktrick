@@ -51,14 +51,14 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
         4. Encode each chunck in the image carrier  
     '''
     i=0
-    real_messages=[message]
-    # while i<len(message):
-    #     # random_index=random.choice([5,6,7,8,9])
-    #     random_index=random.choice([20])
-    #     if i+random_index>len(message):
-    #         random_index=len(message)-i
-    #     real_messages.append(message[i:i+random_index])
-    #     i+=random_index
+    real_messages=[]
+    while i<len(message):
+        # random_index=random.choice([5,6,7,8,9])
+        random_index=random.choice([10])
+        if i+random_index>len(message):
+            random_index=len(message)-i
+        real_messages.append(message[i:i+random_index])
+        i+=random_index
     #encode real messages 
     array_messages = []
     entities_messages = []
@@ -295,6 +295,7 @@ def submit_fox_attempt(team_id):
                 print("error in riddle ",riddle_id)
             continue
     
+    num_of_fake_messages=total_budget
     if Debug:
         endall = time.time()
         print("time of all riddles ",endall - startall)
@@ -303,7 +304,6 @@ def submit_fox_attempt(team_id):
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
     start = time.time()
-    num_of_fake_messages=total_budget
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
     end = time.time()
     print("time of generate_message_array ",end - start)
