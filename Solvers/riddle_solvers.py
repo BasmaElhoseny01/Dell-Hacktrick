@@ -253,12 +253,12 @@ def solve_problem_solving_hard(input: tuple) -> int:
     return grid[-1][-1]
 
 riddle_solvers = {
-    # 'cv_easy': solve_cv_easy,
+    'cv_easy': solve_cv_easy,
     # 'cv_medium': solve_cv_medium,
     # 'ml_easy': solve_ml_easy,
     # 'ml_medium': solve_ml_medium,
-    # 'sec_hard':solve_sec_hard,
-    # 'problem_solving_easy': solve_problem_solving_easy,
+    'sec_hard':solve_sec_hard,
+    'problem_solving_easy': solve_problem_solving_easy,
     'problem_solving_medium': solve_problem_solving_medium,
     'problem_solving_hard': solve_problem_solving_hard,
     # 'sec_medium_stegano': solve_sec_medium,
@@ -267,12 +267,12 @@ riddle_solvers = {
 }
 
 reddle_points = {
-    # 'cv_easy': 1,
+    'cv_easy': 1,
     # 'cv_medium': 2,
     # 'ml_easy': 1,
     # 'ml_medium': 2,
-    # 'sec_hard':3,
-    # 'problem_solving_easy': 1,
+    'sec_hard':3,
+    'problem_solving_easy': 1,
     'problem_solving_medium': 2,
     'problem_solving_hard': 3,
     # 'sec_medium_stegano': 2,
