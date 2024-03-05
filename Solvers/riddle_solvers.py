@@ -59,6 +59,9 @@ def solve_cv_medium(input: tuple) -> list:
     """
     return []
 
+# model_name = "dandelin/vilt-b32-finetuned-vqa"
+# vqa_pipeline = pipeline("image-question-answering", model=model_name)
+vqa_pipeline = pipeline("visual-question-answering")
 
 def solve_cv_hard(input: tuple) -> int:
     input = tuple(input)
@@ -74,7 +77,6 @@ def solve_cv_hard(input: tuple) -> int:
     Returns:
     int: An integer representing the answer to the question about the image.
     """
-    vqa_pipeline = pipeline("visual-question-answering")
 
     answer=vqa_pipeline(image, extracted_question, top_k=1)
 
@@ -253,7 +255,7 @@ def solve_problem_solving_hard(input: tuple) -> int:
 riddle_solvers = {
     'cv_easy': solve_cv_easy,
     # 'cv_medium': solve_cv_medium,
-    'cv_hard': solve_cv_hard,
+    # 'cv_hard': solve_cv_hard,
     # 'ml_easy': solve_ml_easy,
     # 'ml_medium': solve_ml_medium,
     'sec_medium_stegano': solve_sec_medium,
@@ -266,7 +268,7 @@ riddle_solvers = {
 reddle_points = {
     'cv_easy': 1,
     # 'cv_medium': 2,
-    'cv_hard': 3,
+    # 'cv_hard': 3,
     # 'ml_easy': 1,
     # 'ml_medium': 2,
     'sec_medium_stegano': 2,

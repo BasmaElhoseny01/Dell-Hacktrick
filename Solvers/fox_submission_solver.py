@@ -6,7 +6,7 @@ from Solvers.riddle_solvers import riddle_solvers, reddle_points
 
 api_base_url = None
 team_id= ""
-#TODO: Set the api_base_url to the base url of the API when Ready
+# TODO: Set the api_base_url to the base url of the API when Ready
 # api_base_url = "http://3.70.97.142:5000"
 # team_id= "hAaIrJk"
 Debug=True
@@ -121,7 +121,7 @@ def get_riddle(team_id, riddle_id):
     # Check if the request was successful (status code 200)
     if Debug:
         print("get_riddle respons : ",response)
-        print("get_riddle respons : ",response.json())
+        # print("get_riddle respons : ",response.json())
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
         response_data = response.json()
@@ -285,6 +285,7 @@ def submit_fox_attempt(team_id):
                 num_of_fake_messages+=reddle_points[riddle_id]
         except:
             if Debug:
+                solve_riddle(team_id, "0")
                 print("error in riddle ",riddle_id)
             continue
     if Debug:
