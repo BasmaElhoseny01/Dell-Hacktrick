@@ -1,1 +1,1 @@
-Game ended successfully with a score of 33.59526700888889. New Highscore reached!
+Game ended successfully with a score of 9.281385413333334. Which is not higher than your highest score.
