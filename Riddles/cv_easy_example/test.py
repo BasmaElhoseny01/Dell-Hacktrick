@@ -55,6 +55,7 @@ plt.show()
 test_case=(image,shred_width)
 order = solve_cv_easy(test_case)
 print(order)
+print(type(order))
 reconstructed_image = np.hstack([image[:, i * shred_width: (i + 1) * shred_width] for i in order])
 print(reconstructed_image.shape)
 # Display the reconstructed image
