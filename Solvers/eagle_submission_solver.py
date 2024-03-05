@@ -41,8 +41,77 @@ def init_eagle(team_id):
         # Print an error message if the request was not successful
         print("Error in (init_eagle):")
     return None
+def check_consecutive_ones(y):
+    consecutive_ones = 0
+    for num in y:
+        if num == 1:
+            consecutive_ones += 1
+            if consecutive_ones >= 20:
+                break
+        else:
+            consecutive_ones = 0
+    if consecutive_ones >= 20:
+        return True
+    else: return False
 
 
+def select_channel_new(footprints,channel_ids,eagle):
+    '''
+    According to the footprint you recieved (one footprint per channel)
+    you need to decide if you want to listen to any of the 3 channels or just skip this message.
+    Your goal is to try to catch all the real messages and skip the fake and the empty ones.
+    Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.
+    '''
+    # Check Empty Channels
+    if(len(channel_ids)==0): return False,None
+
+    # footprint is a numpy array [(1998,101)]
+    # Preprocessing
+    footprints[np.isinf(footprints)] = 65500.0
+
+    # Remove Last Time step
+    footprints=footprints[:,0:1997,:]
+
+    y=eagle.predict(footprints) # y is batch of 3 channels
+
+    # Threshold on the Probability
+    y_mask=y>0.5
+
+
+    listen_array=np.zeros((len(channel_ids)))
+    for i,mask in enumerate(y_mask):
+      listen_array[i]= check_consecutive_ones(mask)
+    print("listen_array",listen_array)
+
+    if(np.sum(listen_array))==0:
+        print("Select Channel(0)")
+        return False,None
+
+    if (np.sum(listen_array))>1:
+        sum_masked = np.sum(y * y_mask, axis=1)
+        # print("sum_masked",sum_masked)
+
+        # Compute the count of non-zero values along the second axis
+        count_nonzero = np.sum(y_mask, axis=1)
+
+        mean_values = sum_masked / np.where(count_nonzero > 0, count_nonzero, 1)
+        print("mean_values",mean_values)
+        
+        channel_index = np.argmax(mean_values)
+
+        # Select the channel with the highest probability
+        channel_id=channel_ids[channel_index]
+        
+        print("Select Channel(1)")
+        return True,int(channel_id)
+
+    else:    
+        # Select the channel with the highest probability
+        channel_id = channel_ids[np.argmax(listen_array)]
+        print("Select Channel(1)")
+        # Return the channel_id as integer
+        return True,int(channel_id)
+    
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
     '''
@@ -259,18 +328,21 @@ def submit_eagle_attempt(team_id):
             # define the matrix as empty
             matrix = []
             channel_ids = ["1","2","3"]
+            channel_ids_corrected = []
             # add the footprints to the matrix
             for i in range(3):
                 # check if footprints is empty
                 if check_empty_channel(footprints[channel_ids[i]]):
                     # remove the empty channel from channel_ids
-                    channel_ids.remove(channel_ids[i])
                     continue
                 # add the footprint to the matrix
                 matrix.append(footprints[channel_ids[i]])
+                # add the channel id to the channel_ids_corrected
+                channel_ids_corrected.append(channel_ids[i])
             # convert to numpy array
             matrix = np.array(matrix) # (3,1998,101) 
-            listen, channel_id = select_channel(matrix,channel_ids,eagle_model)
+            print("Channel IDs: ",channel_ids_corrected)
+            listen, channel_id = select_channel_new(matrix,channel_ids_corrected,eagle_model)
 
             if listen:
                 print("listening on channel: ",channel_id)
