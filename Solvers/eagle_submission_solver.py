@@ -85,6 +85,11 @@ def select_channel_new(footprints,channel_ids,eagle):
     if(np.sum(listen_array))==0:
         print("Select Channel(0)")
         return False,None
+    
+    # Select the channel with the highest probability
+    channel_id = channel_ids[np.argmax(listen_array)]
+    print("Select Channel(1)")
+    return True,channel_id
 
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
@@ -313,7 +318,7 @@ def submit_eagle_attempt(team_id):
                 matrix.append(footprints[channel_ids[i]])
             # convert to numpy array
             matrix = np.array(matrix) # (3,1998,101) 
-            listen, channel_id = select_channel(matrix,channel_ids,eagle_model)
+            listen, channel_id = select_channel_new(matrix,channel_ids,eagle_model)
 
             if listen:
                 print("listening on channel: ",channel_id)
