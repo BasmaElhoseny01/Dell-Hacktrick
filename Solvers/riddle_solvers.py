@@ -11,7 +11,6 @@ from torchvision import transforms
 from PIL import Image
 
 def solve_cv_easy(test_case: tuple) -> list:
-    test_case = tuple(test_case)
     shredded_image, shred_width = test_case
     shredded_image = np.array(shredded_image)
     """
@@ -31,11 +30,12 @@ def solve_cv_easy(test_case: tuple) -> list:
     order = [0]
     while len(order) < len(sliced_image):
         best_match = -1
-        best_similarity = 0
+        best_similarity = float('inf')
         for shred_index in range(len(sliced_image)):
             if shred_index not in order:
-                similarity = np.sum(current_shred[:,-1] == sliced_image[shred_index][:,0])
-                if similarity > best_similarity:
+                # similarity = np.sum(current_shred[:,-1] == sliced_image[shred_index][:,0])
+                similarity = np.sum(np.square(current_shred[:,-1] - sliced_image[shred_index][:,0]))
+                if similarity < best_similarity:
                     best_similarity = similarity
                     best_match = shred_index
         order.append(best_match)
@@ -277,7 +277,7 @@ riddle_solvers = {
     'problem_solving_easy': solve_problem_solving_easy,
     'problem_solving_medium': solve_problem_solving_medium,
     'problem_solving_hard': solve_problem_solving_hard,
-    # 'sec_medium_stegano': solve_sec_medium,
+    'sec_medium_stegano': solve_sec_medium,
     # 'cv_hard': solve_cv_hard,
 
 }
@@ -291,7 +291,7 @@ reddle_points = {
     'problem_solving_easy': 1,
     'problem_solving_medium': 2,
     'problem_solving_hard': 3,
-    # 'sec_medium_stegano': 2,
+    'sec_medium_stegano': 2,
     # 'cv_hard': 3
 
 }
