@@ -256,7 +256,8 @@ def submit_eagle_attempt(team_id):
             #      of having a message if more than one channel has > 0.5 probability to have a message
 
             # convert footprints dictionary to matrix of (3,1998,101)
-            matrix = np.zeros((3,1998,101))
+            # define the matrix as empty
+            matrix = []
             channel_ids = ["1","2","3"]
             # add the footprints to the matrix
             for i in range(3):
@@ -265,10 +266,10 @@ def submit_eagle_attempt(team_id):
                     # remove the empty channel from channel_ids
                     channel_ids.remove(channel_ids[i])
                     continue
-                matrix[i] = footprints[str(i+1)]
-
+                # add the footprint to the matrix
+                matrix.append(footprints[channel_ids[i]])
             # convert to numpy array
-            matrix = np.array(matrix)
+            matrix = np.array(matrix) # (3,1998,101) 
             listen, channel_id = select_channel(matrix,channel_ids,eagle_model)
 
             if listen:
