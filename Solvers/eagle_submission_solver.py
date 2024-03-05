@@ -81,16 +81,16 @@ def select_channel_new(footprints,channel_ids,eagle):
     listen_array=np.zeros((len(channel_ids)))
     for i,mask in enumerate(y_mask):
       listen_array[i]= check_consecutive_ones(mask)
-    print("listen_array",listen_array)
+    # print("listen_array",listen_array)
 
     if(np.sum(listen_array))==0:
-        print("Select Channel(0)")
+        # print("Select Channel(0)")
         return False,None
 
 
     # Select the channel with the highest probability
     channel_id = channel_ids[np.argmax(listen_array)]
-    print("Select Channel(1)")
+    # print("Select Channel(1)")
     # Return the channel_id as integer
     return True,int(channel_id)
 
@@ -270,10 +270,10 @@ def end_eagle(team_id):
 def check_empty_channel(footprint):
     # Noise
     if np.max(footprint) < 10 and np.min(footprint) > -10:
-        print("empty channel")
+        # print("empty channel")
         return True
     else:
-        print("Not empty channel")
+        # print("Not empty channel")
         return False
 def submit_eagle_attempt(team_id):
     '''
@@ -323,34 +323,34 @@ def submit_eagle_attempt(team_id):
                 channel_ids_corrected.append(channel_ids[i])
             # convert to numpy array
             matrix = np.array(matrix) # (3,1998,101) 
-            print("Channel IDs: ",channel_ids_corrected)
+            # print("Channel IDs: ",channel_ids_corrected)
             listen, channel_id = select_channel_new(matrix,channel_ids_corrected,eagle_model)
 
             if listen:
-                print("listening on channel: ",channel_id)
+                # print("listening on channel: ",channel_id)
                 # call request_msg to get the message
                 secret_message = request_msg(team_id, channel_id)
                 # check if the secret_message is None
                 if secret_message is None:
                     return False
-                print("Started Decoding")
+                # print("Started Decoding")
                 # decode the message
                 decoded_msg = decode(secret_message)
 
                 # print the decoded message
-                print("decoded message: ",decoded_msg)
+                # print("decoded message: ",decoded_msg)
                 # call submit_msg to submit the message
                 footprints = submit_msg(team_id, decoded_msg)
-                print("submit_msg() Submitted Successfully")
+                # print("submit_msg() Submitted Successfully")
 
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
             else:
-                print("Before skip_msg()")
+                # print("Before skip_msg()")
                 # call skip_msg to skip the message
                 footprints = skip_msg(team_id)
-                print("skip_msg() Skipped Successfully")
+                # print("skip_msg() Skipped Successfully")
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
