@@ -307,18 +307,21 @@ def submit_eagle_attempt(team_id):
             # define the matrix as empty
             matrix = []
             channel_ids = ["1","2","3"]
+            channel_ids_corrected = []
             # add the footprints to the matrix
             for i in range(3):
                 # check if footprints is empty
                 if check_empty_channel(footprints[channel_ids[i]]):
                     # remove the empty channel from channel_ids
-                    channel_ids.remove(channel_ids[i])
                     continue
                 # add the footprint to the matrix
                 matrix.append(footprints[channel_ids[i]])
+                # add the channel id to the channel_ids_corrected
+                channel_ids_corrected.append(channel_ids[i])
             # convert to numpy array
             matrix = np.array(matrix) # (3,1998,101) 
-            listen, channel_id = select_channel_new(matrix,channel_ids,eagle_model)
+            print("Channel IDs: ",channel_ids_corrected)
+            listen, channel_id = select_channel_new(matrix,channel_ids_corrected,eagle_model)
 
             if listen:
                 print("listening on channel: ",channel_id)
