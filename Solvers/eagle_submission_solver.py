@@ -89,8 +89,8 @@ def select_channel_new(footprints,channel_ids,eagle):
     # Select the channel with the highest probability
     channel_id = channel_ids[np.argmax(listen_array)]
     print("Select Channel(1)")
-    return True,channel_id
-
+    # Return the channel_id as integer
+    return True,int(channel_id)
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
     '''
