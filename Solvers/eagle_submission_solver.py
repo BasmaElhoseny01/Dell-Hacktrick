@@ -246,16 +246,16 @@ def submit_eagle_attempt(team_id):
 
             #TODO: change this logic so that select channel that has highest probability 
             #      of having a message if more than one channel has > 0.5 probability to have a message
-            for i in range(1,4):
-                spectogram = footprints[str(4-i)]
-                # convert to numpy array
-                spectogram = np.array(spectogram)
-                # check if the spectogram is empty
-                # call select_channel to decide if to listen on the channel or not
-                if select_channel(spectogram,eagle_model):
-                    listen = True
-                    channel_id = 4-i
-                    break
+
+            # convert footprints dictionary to matrix of (3,1998,101)
+            matrix = np.zeros((3,1998,101))
+            # add the footprints to the matrix
+            for i in range(3):
+                matrix[i] = footprints[str(i+1)]
+            # convert to numpy array
+            matrix = np.array(matrix)
+            listen, channel_id = select_channel(matrix,eagle_model)
+            
             if listen:
                 print("listening on channel: ",channel_id)
                 # call request_msg to get the message
