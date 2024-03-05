@@ -8,7 +8,9 @@ def read_image(file_path):
     image = Image.open(file_path)
     return image
 
-img=read_image("C:/Users/engah/Downloads/GP/Dell/HackTrick24-main/Dell-Hacktrick/sample_example/encoded.png")
+img=read_image("D:\Dell\Dell-Hacktrick\sample_example\encoded.png")
+
+print(img.size)
 
 print(solve_sec_medium(img))
 

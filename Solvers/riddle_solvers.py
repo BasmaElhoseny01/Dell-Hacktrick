@@ -136,21 +136,13 @@ def solve_sec_medium(input: torch.Tensor) -> str:
     str: A string representing the decoded message from the image.
     """
     img = np.array(input)
-    # img = Image.fromarray(img)
-
-    if len(img.shape)==4:
-        img=transforms.ToTensor()(img)
-    elif img.shape[0]!=3:
-        img=img.permute(2,0,1)
-        img=transforms.ToTensor()(img)
-        img=img.unsqueeze(0)
-    else:
-        img=transforms.ToTensor()(img)
-        img=img.unsqueeze(0)
-        
+    img = Image.fromarray(img)
+    img=transforms.ToTensor()(img)
+    img=img.unsqueeze(0)
     str=decode(img)
-    print(str)
-    return decode(img)
+    # print(str)
+    return str
+    
 
 def solve_sec_hard(input:tuple)->str:
     """
