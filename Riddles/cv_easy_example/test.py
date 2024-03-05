@@ -42,6 +42,34 @@ def solve_cv_easy(test_case: tuple) -> list:
 
     return order
 
+# import numpy as np
+# import concurrent.futures
+
+# def solve_cv_easy(test_case: tuple) -> list:
+#     shredded_image, shred_width = test_case
+#     shredded_image = np.array(shredded_image)
+
+#     def calculate_similarity(shred_index):
+#         nonlocal sliced_image, current_shred, order
+#         if shred_index not in order:
+#             similarity = np.sum(current_shred[:,-1] == sliced_image[shred_index][:,0])
+#             return shred_index, similarity
+#         return shred_index, 0
+
+#     # Slice image by shred_width vertically
+#     sliced_image = [shredded_image[:, i * shred_width: (i + 1) * shred_width] for i in range(shredded_image.shape[1] // shred_width)]
+#     current_shred = sliced_image[0]
+#     order = [0]
+
+#     with concurrent.futures.ThreadPoolExecutor() as executor:
+#         while len(order) < len(sliced_image):
+#             shred_indices = range(len(sliced_image))
+#             results = list(executor.map(calculate_similarity, shred_indices))
+#             best_match, best_similarity = max(results, key=lambda x: x[1])
+#             order.append(best_match)
+#             current_shred = sliced_image[best_match]
+
+#     return order
 
 # Example usage
 file_path = 'E:\MY Work\Dell_Competation\Dell-Hacktrick\Riddles\cv_easy_example\shredded.jpg'
