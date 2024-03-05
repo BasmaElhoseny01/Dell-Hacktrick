@@ -3,3 +3,11 @@
 *.npy
 eagle/data/fake_counts.csv
 eagle/data/real_counts.csv
+footprints/explore.py
+footprints/explore_data copy.ipynb
+footprints/explore_data.ipynb
+footprints/real_501.csv
+footprints/real_501_labels
+footprints/real_501_labels.csv
+footprints/test.ipynb
+footprints/test.ipynb
