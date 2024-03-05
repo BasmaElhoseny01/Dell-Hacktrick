@@ -130,7 +130,6 @@ def make_message(image):
 
     image = decoder(image).view(-1) > 0
     image = torch.tensor(image, dtype=torch.uint8)
-
     # split and decode messages
     candidates = Counter()
     bits = image.data.cpu().numpy().tolist()
@@ -141,8 +140,8 @@ def make_message(image):
 
     # choose most common message
     if len(candidates) == 0:
-    #   raise ValueError('Failed to find message.')
-        return
+        raise ValueError('Failed to find message.')
+        return  
 
     candidate, _ = candidates.most_common(1)[0]
     return candidate

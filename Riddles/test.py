@@ -1,15 +1,26 @@
+from Solvers.riddle_solvers import solve_sec_medium
 from SteganoGAN.utils import *
-import cv2
+from PIL import Image
+from torchvision import transforms
+
 def read_image(file_path):
     # Read the image using OpenCV
-    image = cv2.imread(file_path)
+    image = Image.open(file_path)
     return image
+
 img=read_image("C:/Users/engah/Downloads/GP/Dell/HackTrick24-main/Dell-Hacktrick/sample_example/encoded.png")
-# change img to tensor
-img = torch.tensor(img,dtype=torch.float32)
-print(img.shape)
-img=img.permute(2,0,1)
-img=img.unsqueeze(0)
-str=decode(img)
-print(str)
-print(type(str))
+
+print(solve_sec_medium(img))
+
+# if len(img.shape)==4:
+#     img=transforms.ToTensor()(img)
+# elif img.shape[0]!=3:
+#     img=img.permute(2,0,1)
+#     img=transforms.ToTensor()(img)
+#     img=img.unsqueeze(0)
+# else:
+#     img=transforms.ToTensor()(img)
+#     img=img.unsqueeze(0)
+
+# str=decode(img)
+# print(str)

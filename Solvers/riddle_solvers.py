@@ -7,7 +7,8 @@ from Crypto.Util.Padding import pad, unpad
 from SteganoGAN.utils import *
 from transformers import pipeline
 from statsmodels.tsa.arima.model import ARIMA
-
+from torchvision import transforms
+from PIL import Image
 
 def solve_cv_easy(test_case: tuple) -> list:
     test_case = tuple(test_case)
@@ -125,7 +126,6 @@ def solve_ml_medium(input: list) -> int:
 
 
 def solve_sec_medium(input: torch.Tensor) -> str:
-    img = torch.tensor(input)
     """
     This function takes a torch.Tensor as input and returns a string as output.
 
@@ -135,6 +135,21 @@ def solve_sec_medium(input: torch.Tensor) -> str:
     Returns:
     str: A string representing the decoded message from the image.
     """
+    img = np.array(input)
+    # img = Image.fromarray(img)
+
+    if len(img.shape)==4:
+        img=transforms.ToTensor()(img)
+    elif img.shape[0]!=3:
+        img=img.permute(2,0,1)
+        img=transforms.ToTensor()(img)
+        img=img.unsqueeze(0)
+    else:
+        img=transforms.ToTensor()(img)
+        img=img.unsqueeze(0)
+        
+    str=decode(img)
+    print(str)
     return decode(img)
 
 def solve_sec_hard(input:tuple)->str:
