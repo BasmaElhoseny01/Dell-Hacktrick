@@ -1,6 +1,6 @@
 import numpy as np
 from Solvers.get_eagle import get_eagle_model
-
+import time
 
 def check_conectiave_ones(y):
     consecutive_ones = 0
@@ -22,9 +22,16 @@ def select_channel(footprint,eagle):
     Your goal is to try to catch all the real messages and skip the fake and the empty ones.
     Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.        
     '''
+    timestamp = str(int(time.time()))
+    np.save(f'/content/footprint_{timestamp}.npy', footprint)
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
     footprint[np.isinf(footprint)] = 65500.0
+    footprint[np.isinf(footprint)] = 65500.0
+    footprint[footprint > 65500.0] = 65500.0
+    
+    footprint=footprint.astype(np.uint16)
+    footprint=footprint.astype(np.float16)/(2.0**16)
 
     # Remove Last Time step
     footprint=footprint[0:1997,:]

@@ -31,7 +31,7 @@ def weighted_binary_crossentropy(y_true, y_pred):
     return tf.reduce_mean(bce(y_true, y_pred) * weights)
 
 
-loaded_model = load_model('./eagle/model_v6.h5')
+loaded_model = load_model('./eagle/model_v7.h5')
 loaded_model.summary()
 
 loss, acc = loaded_model.evaluate(X_val, Y_val)
