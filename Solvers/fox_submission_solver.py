@@ -3,6 +3,7 @@ import numpy as np
 import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
+import time
 
 api_base_url = None
 team_id= ""
@@ -267,6 +268,7 @@ def submit_fox_attempt(team_id):
     #2. Solve riddles
     # iterate on ridele_solvers
     num_of_fake_messages=0
+    startall = time.time()
     for riddle_id in riddle_solvers:
         try:
             test_case ,riddle_exist= get_riddle(team_id, riddle_id)
@@ -275,8 +277,11 @@ def submit_fox_attempt(team_id):
                 if Debug:
                     print("riddle not exist ",riddle_id)
                 continue
-            
+            start = time.time()
             solution = riddle_solvers[riddle_id](test_case)
+            end = time.time()
+            print("time of riddle ",riddle_id,end - start)
+
             status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
             if Debug:
                 print("total_budget",total_budget)    
@@ -289,12 +294,18 @@ def submit_fox_attempt(team_id):
                 solve_riddle(team_id, "0")
                 print("error in riddle ",riddle_id)
             continue
+    
     if Debug:
+        endall = time.time()
+        print("time of all riddles ",endall - startall)
         print("num_of_fake_messages",num_of_fake_messages)
 
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
+    start = time.time()
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
+    end = time.time()
+    print("time of generate_message_array ",end - start)
     #5. Send the messages
     if Debug:
         print("array_messages",len(array_messages))
