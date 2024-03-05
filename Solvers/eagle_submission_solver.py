@@ -7,9 +7,9 @@ from Solvers.get_eagle import get_eagle_model
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
-# api_base_url = "http://3.70.97.142:5000/"
-# team_id="hAaIrJk"
-team_id=None
+# team_id=None
+api_base_url = "http://3.70.97.142:5000/"
+team_id="hAaIrJk"
 DEBUG = False
 
 def init_eagle(team_id):
@@ -72,11 +72,11 @@ def select_channel(footprint,eagle):
     for num in y:
         if num == 1:
             consecutive_ones += 1
-            if consecutive_ones >= 10:
+            if consecutive_ones >= 20:
                 break
         else:
             consecutive_ones = 0
-    if consecutive_ones >= 10:
+    if consecutive_ones >= 20:
         print("Select Channel(1)")
         return True
     else: 
