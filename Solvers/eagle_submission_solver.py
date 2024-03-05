@@ -41,7 +41,58 @@ def init_eagle(team_id):
         # Print an error message if the request was not successful
         print("Error in (init_eagle):")
     return None
+def check_consecutive_ones(y):
+    consecutive_ones = 0
+    for num in y:
+        if num == 1:
+            consecutive_ones += 1
+            if consecutive_ones >= 20:
+                break
+        else:
+            consecutive_ones = 0
+    if consecutive_ones >= 20:
+        return True
+    else: return False
 
+
+def select_channel_new(footprints,channel_ids,eagle):
+    '''
+    According to the footprint you recieved (one footprint per channel)
+    you need to decide if you want to listen to any of the 3 channels or just skip this message.
+    Your goal is to try to catch all the real messages and skip the fake and the empty ones.
+    Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.
+    '''
+    # Check Empty Channels
+    if(len(channel_ids)==0): return False,None
+
+    # footprint is a numpy array [(1998,101)]
+    # Preprocessing
+    footprints[np.isinf(footprints)] = 65500.0
+
+    # Remove Last Time step
+    footprints=footprints[:,0:1997,:]
+
+    y=eagle.predict(footprints) # y is batch of 3 channels
+
+    # Threshold on the Probability
+    y_mask=y>0.5
+
+
+    listen_array=np.zeros((len(channel_ids)))
+    for i,mask in enumerate(y_mask):
+      listen_array[i]= check_consecutive_ones(mask)
+    # print("listen_array",listen_array)
+
+    if(np.sum(listen_array))==0:
+        # print("Select Channel(0)")
+        return False,None
+
+
+    # Select the channel with the highest probability
+    channel_id = channel_ids[np.argmax(listen_array)]
+    # print("Select Channel(1)")
+    # Return the channel_id as integer
+    return True,int(channel_id)
 
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
@@ -219,10 +270,10 @@ def end_eagle(team_id):
 def check_empty_channel(footprint):
     # Noise
     if np.max(footprint) < 10 and np.min(footprint) > -10:
-        print("empty channel")
+        # print("empty channel")
         return True
     else:
-        print("Not empty channel")
+        # print("Not empty channel")
         return False
 def submit_eagle_attempt(team_id):
     '''
@@ -259,44 +310,47 @@ def submit_eagle_attempt(team_id):
             # define the matrix as empty
             matrix = []
             channel_ids = ["1","2","3"]
+            channel_ids_corrected = []
             # add the footprints to the matrix
             for i in range(3):
                 # check if footprints is empty
                 if check_empty_channel(footprints[channel_ids[i]]):
                     # remove the empty channel from channel_ids
-                    channel_ids.remove(channel_ids[i])
                     continue
                 # add the footprint to the matrix
                 matrix.append(footprints[channel_ids[i]])
+                # add the channel id to the channel_ids_corrected
+                channel_ids_corrected.append(channel_ids[i])
             # convert to numpy array
             matrix = np.array(matrix) # (3,1998,101) 
-            listen, channel_id = select_channel(matrix,channel_ids,eagle_model)
+            # print("Channel IDs: ",channel_ids_corrected)
+            listen, channel_id = select_channel_new(matrix,channel_ids_corrected,eagle_model)
 
             if listen:
-                print("listening on channel: ",channel_id)
+                # print("listening on channel: ",channel_id)
                 # call request_msg to get the message
                 secret_message = request_msg(team_id, channel_id)
                 # check if the secret_message is None
                 if secret_message is None:
                     return False
-                print("Started Decoding")
+                # print("Started Decoding")
                 # decode the message
                 decoded_msg = decode(secret_message)
 
                 # print the decoded message
-                print("decoded message: ",decoded_msg)
+                # print("decoded message: ",decoded_msg)
                 # call submit_msg to submit the message
                 footprints = submit_msg(team_id, decoded_msg)
-                print("submit_msg() Submitted Successfully")
+                # print("submit_msg() Submitted Successfully")
 
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
             else:
-                print("Before skip_msg()")
+                # print("Before skip_msg()")
                 # call skip_msg to skip the message
                 footprints = skip_msg(team_id)
-                print("skip_msg() Skipped Successfully")
+                # print("skip_msg() Skipped Successfully")
                 # check if the footprints is None
                 if footprints is None:
                     break_loop = True
