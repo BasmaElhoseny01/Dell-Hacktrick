@@ -23,8 +23,8 @@ def init_fox(team_id):
     payload = {"teamId": team_id}
     # Make the API request
     response = requests.post(url, json=payload)
-    if Debug:
-        print("init : ",response)
+    # if Debug:
+        # print("init : ",response)
     # Check if the request was successful (status code 200)
     if response.status_code == 200 or response.status_code == 201:
         # Parse the JSON response
@@ -126,8 +126,8 @@ def get_riddle(team_id, riddle_id):
         # Parse the JSON response
         response_data = response.json()
         test_case = response_data.get("test_case")
-        if Debug:
-            print("get_riddle :",response_data)
+        # if Debug:
+        #     print("get_riddle :",response_data)
     else:
         # Print an error message if the request was not successful
         if Debug:

@@ -9,6 +9,7 @@ from transformers import pipeline
 
 
 def solve_cv_easy(test_case: tuple) -> list:
+    test_case = tuple(test_case)
     shredded_image, shred_width = test_case
     shredded_image = np.array(shredded_image)
     """
@@ -60,6 +61,7 @@ def solve_cv_medium(input: tuple) -> list:
 
 
 def solve_cv_hard(input: tuple) -> int:
+    input = tuple(input)
     extracted_question, image = input
     """
     This function takes a tuple as input and returns an integer as output.
