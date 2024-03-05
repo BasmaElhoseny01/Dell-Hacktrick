@@ -3,6 +3,7 @@ import numpy as np
 import random
 from LSBSteg import encode
 from Solvers.riddle_solvers import riddle_solvers, reddle_points
+import time
 
 api_base_url = None
 team_id= ""
@@ -50,13 +51,14 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
         4. Encode each chunck in the image carrier  
     '''
     i=0
-    real_messages=[]
-    while i<len(message):
-        random_index=random.choice([5,6,7,8,9])
-        if i+random_index>len(message):
-            random_index=len(message)-i
-        real_messages.append(message[i:i+random_index])
-        i+=random_index
+    real_messages=[message]
+    # while i<len(message):
+    #     # random_index=random.choice([5,6,7,8,9])
+    #     random_index=random.choice([20])
+    #     if i+random_index>len(message):
+    #         random_index=len(message)-i
+    #     real_messages.append(message[i:i+random_index])
+    #     i+=random_index
     #encode real messages 
     array_messages = []
     entities_messages = []
@@ -82,7 +84,7 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
                 fake_message_index.remove(random_element)
             #intialize fake message with the original image carrier
             for i in fake_message_index:
-                fake_messag_encode=encode(image_carrier, "dell "+real_message[::-1]).tolist()
+                fake_messag_encode=encode(image_carrier, real_message[::-1]).tolist()
                 array_message[i] =fake_messag_encode
                 entities_message[i] = "F"
                 num_of_fake_messages-=1
@@ -266,6 +268,7 @@ def submit_fox_attempt(team_id):
     #2. Solve riddles
     # iterate on ridele_solvers
     num_of_fake_messages=0
+    startall = time.time()
     for riddle_id in riddle_solvers:
         try:
             test_case ,riddle_exist= get_riddle(team_id, riddle_id)
@@ -274,26 +277,36 @@ def submit_fox_attempt(team_id):
                 if Debug:
                     print("riddle not exist ",riddle_id)
                 continue
-            
+            start = time.time()
             solution = riddle_solvers[riddle_id](test_case)
+            end = time.time()
+            print("time of riddle ",riddle_id,end - start)
+
             status, total_budget, budget_increase,Done = solve_riddle(team_id, solution)
             if Debug:
                 print("total_budget",total_budget)    
                 print("riddel id",riddle_id,"status",status)
 
-            if Done and status:
-                num_of_fake_messages+=reddle_points[riddle_id]
+            # if Done and status:
+                # num_of_fake_messages+=reddle_points[riddle_id]
         except:
             if Debug:
                 solve_riddle(team_id, "0")
                 print("error in riddle ",riddle_id)
             continue
+    
     if Debug:
+        endall = time.time()
+        print("time of all riddles ",endall - startall)
         print("num_of_fake_messages",num_of_fake_messages)
 
     #3. Make your own Strategy of sending the messages in the 3 channels
     #4. Make your own Strategy of splitting the message into chunks
+    start = time.time()
+    num_of_fake_messages=total_budget
     array_messages ,entities_messages = generate_message_array(message, image_carriers ,num_of_fake_messages)
+    end = time.time()
+    print("time of generate_message_array ",end - start)
     #5. Send the messages
     if Debug:
         print("array_messages",len(array_messages))
