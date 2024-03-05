@@ -7,9 +7,9 @@ from Solvers.get_eagle import get_eagle_model
 
 api_base_url = None
 #TODO: Set the api_base_url to the base url of the API when Ready
-# team_id=None
 api_base_url = "http://3.70.97.142:5000/"
 team_id="hAaIrJk"
+# team_id=None
 DEBUG = False
 
 def init_eagle(team_id):
@@ -55,6 +55,13 @@ def select_channel(footprint,eagle):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
     # Create a filename using the timestamp
     np.save(f'/content/footprint_{timestamp}.npy', footprint)
+
+    # Noise
+    if np.max(footprint) < 10 and np.min(footprint) > -10:
+        print("empty channel",timestamp)
+        return False
+    else:
+        print("Not empty channel",timestamp)
 
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
@@ -240,14 +247,14 @@ def submit_eagle_attempt(team_id):
             #TODO: change this logic so that select channel that has highest probability 
             #      of having a message if more than one channel has > 0.5 probability to have a message
             for i in range(1,4):
-                spectogram = footprints[str(i)]
+                spectogram = footprints[str(4-i)]
                 # convert to numpy array
                 spectogram = np.array(spectogram)
                 # check if the spectogram is empty
                 # call select_channel to decide if to listen on the channel or not
                 if select_channel(spectogram,eagle_model):
                     listen = True
-                    channel_id = i
+                    channel_id = 4-i
                     break
             if listen:
                 print("listening on channel: ",channel_id)
