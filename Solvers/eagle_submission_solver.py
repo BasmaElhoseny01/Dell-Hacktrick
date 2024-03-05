@@ -52,16 +52,16 @@ def select_channel(footprint,eagle):
     Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.        
     '''
     # Save file named by timestamp
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
+    # timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
     # Create a filename using the timestamp
-    np.save(f'/content/footprint_{timestamp}.npy', footprint)
+    # np.save(f'/content/footprint_{timestamp}.npy', footprint)
 
     # Noise
     if np.max(footprint) < 10 and np.min(footprint) > -10:
-        print("empty channel",timestamp)
+        print("empty channel")
         return False
     else:
-        print("Not empty channel",timestamp)
+        print("Not empty channel")
 
     # footprint is a numpy array [(1998,101)]
     # Preprocessing
