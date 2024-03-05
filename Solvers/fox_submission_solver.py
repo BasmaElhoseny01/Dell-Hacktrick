@@ -52,7 +52,8 @@ def generate_message_array(message, image_carrier,num_of_fake_messages):
     i=0
     real_messages=[]
     while i<len(message):
-        random_index=random.choice([5,6,7,8,9])
+        # random_index=random.choice([5,6,7,8,9])
+        random_index=random.choice([10])
         if i+random_index>len(message):
             random_index=len(message)-i
         real_messages.append(message[i:i+random_index])

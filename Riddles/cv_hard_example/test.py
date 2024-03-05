@@ -15,10 +15,12 @@ def solve_cv_hard(input: tuple) -> int:
     int: An integer representing the answer to the question about the image.
     """
     vqa_pipeline = pipeline("visual-question-answering")
-
+    #Q: is model in gpu or not?
+    #A: No, it is not in gpu
+    #Q: How to make it in gpu?
+    #A: I don't know
     answer=vqa_pipeline(image, extracted_question, top_k=1)
-
-    return answer[0]['answer']
+    return int(answer[0]['answer'])
 
 
 # Example usage:
@@ -31,6 +33,8 @@ import time
 start = time.time()
 # Get the answer
 result = solve_cv_hard((question,image))
+
 end = time.time()
 print(end - start)
 print(result)
+print("type",type(result))
