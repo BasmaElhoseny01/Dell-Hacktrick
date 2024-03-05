@@ -43,7 +43,7 @@ def init_eagle(team_id):
     return None
 
 
-def select_channel(footprint,channel_ids,eagle):
+def select_channel(footprint,eagle):
     print("Selecting Channel")
     '''
     According to the footprint you recieved (one footprint per channel)
@@ -216,14 +216,6 @@ def end_eagle(team_id):
         print("Error in (end_eagle):")
     return None
 
-def check_empty_channel(footprint):
-    # Noise
-    if np.max(footprint) < 10 and np.min(footprint) > -10:
-        print("empty channel")
-        return True
-    else:
-        print("Not empty channel")
-        return False
 def submit_eagle_attempt(team_id):
     '''
      Call this function to start playing as an eagle. 
@@ -254,23 +246,16 @@ def submit_eagle_attempt(team_id):
 
             #TODO: change this logic so that select channel that has highest probability 
             #      of having a message if more than one channel has > 0.5 probability to have a message
-
-            # convert footprints dictionary to matrix of (3,1998,101)
-            matrix = np.zeros((3,1998,101))
-            channel_ids = ["1","2","3"]
-            # add the footprints to the matrix
-            for i in range(3):
-                # check if footprints is empty
-                if check_empty_channel(footprints[channel_ids[i]]):
-                    # remove the empty channel from channel_ids
-                    channel_ids.remove(channel_ids[i])
-                    continue
-                matrix[i] = footprints[str(i+1)]
-
-            # convert to numpy array
-            matrix = np.array(matrix)
-            listen, channel_id = select_channel(matrix,channel_ids,eagle_model)
-
+            for i in range(1,4):
+                spectogram = footprints[str(4-i)]
+                # convert to numpy array
+                spectogram = np.array(spectogram)
+                # check if the spectogram is empty
+                # call select_channel to decide if to listen on the channel or not
+                if select_channel(spectogram,eagle_model):
+                    listen = True
+                    channel_id = 4-i
+                    break
             if listen:
                 print("listening on channel: ",channel_id)
                 # call request_msg to get the message
