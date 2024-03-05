@@ -41,7 +41,50 @@ def init_eagle(team_id):
         # Print an error message if the request was not successful
         print("Error in (init_eagle):")
     return None
+def check_consecutive_ones(y):
+    consecutive_ones = 0
+    for num in y:
+        if num == 1:
+            consecutive_ones += 1
+            if consecutive_ones >= 20:
+                break
+        else:
+            consecutive_ones = 0
+    if consecutive_ones >= 20:
+        return True
+    else: return False
 
+def select_channel_new(footprints,channel_ids,eagle):
+    '''
+    According to the footprint you recieved (one footprint per channel)
+    you need to decide if you want to listen to any of the 3 channels or just skip this message.
+    Your goal is to try to catch all the real messages and skip the fake and the empty ones.
+    Refer to the documentation of the Footprints to know more what the footprints represent to guide you in your approach.
+    '''
+    # Check Empty Channels
+    if(len(channel_ids)==0): return False,None
+
+    # footprint is a numpy array [(1998,101)]
+    # Preprocessing
+    footprints[np.isinf(footprints)] = 65500.0
+
+    # Remove Last Time step
+    footprints=footprints[:,0:1997,:]
+
+    y=eagle.predict(footprints) # y is batch of 3 channels
+
+    # Threshold on the Probability
+    y_mask=y>0.5
+
+
+    listen_array=np.zeros((len(channel_ids)))
+    for i,mask in enumerate(y_mask):
+      listen_array[i]= check_consecutive_ones(mask)
+    print("listen_array",listen_array)
+
+    if(np.sum(listen_array))==0:
+        print("Select Channel(0)")
+        return False,None
 
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
