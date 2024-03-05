@@ -6,6 +6,7 @@ from Crypto.Cipher import DES
 from Crypto.Util.Padding import pad, unpad
 from SteganoGAN.utils import *
 from transformers import pipeline
+from statsmodels.tsa.arima.model import ARIMA
 
 
 def solve_cv_easy(test_case: tuple) -> list:
@@ -85,7 +86,6 @@ def solve_cv_hard(input: tuple) -> int:
 
 def solve_ml_easy(input: pd.DataFrame) -> list:
     data = pd.DataFrame(input)
-
     """
     This function takes a pandas DataFrame as input and returns a list as output.
 
@@ -95,10 +95,19 @@ def solve_ml_easy(input: pd.DataFrame) -> list:
     Returns:
     list: A list of floats representing the output of the function.
     """
-    # implement time series forecasting using ARIMA model
+   # Load the data
+    data = data.dropna()
+    data['timestamp'] = pd.to_datetime(data['timestamp'])
+    data = data.set_index('timestamp')
 
+    # Fit ARIMA model
+    model = ARIMA(data, order=(5, 1, 1))
+    model_fit = model.fit()
 
-    return []
+    # Make predictions
+    predictions = model_fit.forecast(steps=50).values  # Convert to array
+    predictions=predictions.tolist()
+    return predictions
 
 
 def solve_ml_medium(input: list) -> int:
@@ -253,12 +262,12 @@ def solve_problem_solving_hard(input: tuple) -> int:
     return grid[-1][-1]
 
 riddle_solvers = {
-    # 'cv_easy': solve_cv_easy,
+    'cv_easy': solve_cv_easy,
     # 'cv_medium': solve_cv_medium,
-    # 'ml_easy': solve_ml_easy,
+    'ml_easy': solve_ml_easy,
     # 'ml_medium': solve_ml_medium,
-    # 'sec_hard':solve_sec_hard,
-    # 'problem_solving_easy': solve_problem_solving_easy,
+    'sec_hard':solve_sec_hard,
+    'problem_solving_easy': solve_problem_solving_easy,
     'problem_solving_medium': solve_problem_solving_medium,
     'problem_solving_hard': solve_problem_solving_hard,
     # 'sec_medium_stegano': solve_sec_medium,
@@ -267,12 +276,12 @@ riddle_solvers = {
 }
 
 reddle_points = {
-    # 'cv_easy': 1,
+    'cv_easy': 1,
     # 'cv_medium': 2,
-    # 'ml_easy': 1,
+    'ml_easy': 1,
     # 'ml_medium': 2,
-    # 'sec_hard':3,
-    # 'problem_solving_easy': 1,
+    'sec_hard':3,
+    'problem_solving_easy': 1,
     'problem_solving_medium': 2,
     'problem_solving_hard': 3,
     # 'sec_medium_stegano': 2,
