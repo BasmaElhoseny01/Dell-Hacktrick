@@ -54,6 +54,7 @@ def check_consecutive_ones(y):
         return True
     else: return False
 
+
 def select_channel_new(footprints,channel_ids,eagle):
     '''
     According to the footprint you recieved (one footprint per channel)
@@ -85,12 +86,14 @@ def select_channel_new(footprints,channel_ids,eagle):
     if(np.sum(listen_array))==0:
         print("Select Channel(0)")
         return False,None
-    
+
+
     # Select the channel with the highest probability
     channel_id = channel_ids[np.argmax(listen_array)]
     print("Select Channel(1)")
     # Return the channel_id as integer
     return True,int(channel_id)
+
 def select_channel(footprint,channel_ids,eagle):
     print("Selecting Channel")
     '''
