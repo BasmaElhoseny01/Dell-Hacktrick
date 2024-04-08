@@ -14,7 +14,7 @@ https://github.com/BasmaElhoseny01/Dell-Hacktrick/assets/72309546/2d657aa5-389b-
 - <a href ="#contributors">Contributors</a>
 - <a href ="#license">License</a>
 
-## <img align="center" width =60px src="https://i.pinimg.com/originals/cb/4d/f0/cb4df0937c95f17760b69d74395b9bd2.gif"> Overview <a id = "Overview"></a>]
+## <img align="center" width =60px src="https://i.pinimg.com/originals/cb/4d/f0/cb4df0937c95f17760b69d74395b9bd2.gif"> Overview <a id = "Overview"></a>
 This is Code for the Dell Hack-Trick for 2024. It is maily based on AI and Porblem Solving
 ![image](https://github.com/BasmaElhoseny01/Dell-Hacktrick/assets/72309546/d282cd57-9e77-4207-b2e1-30162958d550)
 
