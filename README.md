@@ -14,6 +14,8 @@ https://github.com/BasmaElhoseny01/Dell-Hacktrick/assets/72309546/2d657aa5-389b-
 - <a href ="#contributors">Contributors</a>
 - <a href ="#license">License</a>
 
+## <img align="center" width =60px src="https://i.pinimg.com/originals/cb/4d/f0/cb4df0937c95f17760b69d74395b9bd2.gif"> Overview <a id = "Overview"></a>
+
 
 
 ## <img align="center" width =60px src="https://cdn-icons-png.freepik.com/512/6746/6746962.png"> Achievement <a id = "Achievement"></a>
@@ -36,7 +38,10 @@ https://github.com/BasmaElhoseny01/Dell-Hacktrick/assets/72309546/2d657aa5-389b-
 <p>The primary objective for the Fox is to send the secret message to the parrot, encoded through steganography, while devising a strategic game plan to outsmart the Eagle and prevent it from intercepting the message.</p>
 
 ### <img align="center"  width =80px  src="https://media4.giphy.com/media/7nH4YN01jqWt7Oqh5P/giphy.gif?cid=6c09b9520t7w2r9qtck8hn40x7gcr8vhpxmj1ek9ixl7h6fj&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s"> Eagle <a id = "Eagle"></a>
+<p>The Eagle's main objective is to successfully intercept Real messages(messages with word DELL) in order to decipher the hidden message.Given the Voice Message as spectgram teh Eagle has to choose whether to open the mesaage or not.It is a trigger word dtection problem.</p>
 
+
+#### Network
 
 
 <!-- Contributors -->
